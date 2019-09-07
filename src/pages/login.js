@@ -4,11 +4,32 @@ import {
     StyleSheet,
     Text,
     View,
-    VrButton
+    VrButton,
+    NativeModules
   } from 'react-360';
 
+  const fbAuth= NativeModules.fbAuth;
+
 class LoginPage extends React.Component{
+  state={
+    login: false,
+  }
+   componentDidMount(){
+        fbAuth.fbsetup();
+   }
+   handleAuth(){
+    fbAuth.fbAuthenticate((val) => {
+      this.setState({
+        login: val,
+      });
+    });
+    this.props.login();
+   }
+
     render = ()=>{
+        if(this.state.login){
+          this.props.login
+        }
         return(
             <View style={styles.panel}>
                 <View style={styles.greetingBox}>
@@ -18,9 +39,9 @@ class LoginPage extends React.Component{
                 </View>
 
                 <View style={styles.greetingBox}>
-                    <VrButton onClick={this.props.login}>
+                    <VrButton onClick={() => this.handleAuth()}>
                         <Text style={styles.greeting}>
-                            Login
+                            FbLogin
                         </Text>
                     </VrButton>
                 </View>
@@ -42,8 +63,8 @@ const styles = StyleSheet.create({
     greetingBox: {
       padding: 20,
       margin:10,
-      backgroundColor: '#000000',
-      borderColor: '#639dda',
+      backgroundColor: '#4267b2',
+      borderColor: '#4267b2',
       borderWidth: 2,
     },
     greeting: {

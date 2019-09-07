@@ -7,6 +7,12 @@ import io from 'socket.io-client';
   import {validateCommand,getCommand} from './speech-recognition/p5speech/trie';
 
 // import Peer from 'peerjs';
+// import React from 'react';
+
+// import {
+//   Text,
+// } from 'react-360';
+
 import {
   ReactInstance,
   Surface,
@@ -19,12 +25,13 @@ console.log("Peer:", Peer);
 console.log("io:", io);
 
 function init(bundle, parent, options = {}) {
-  const r360 = new ReactInstance(bundle, parent, {
+   r360 = new ReactInstance(bundle, parent, {
     // Add custom options here
     fullScreen: true,
     nativeModules: [
       ctx => new peerAudioModule(ctx),
-      ctx => new speechRecognition(ctx)
+      ctx => new speechRecognition(ctx),
+      ctx => new fbAuth(ctx),
     ],
     ...options,
   });
@@ -154,6 +161,79 @@ class speechRecognition extends Module{
     speechRec.start(continuous, interim);
 
   }
+}
+
+class fbAuth extends Module{
+
+  constructor(ctx){
+    super('fbAuth');
+    this._ctx = ctx;
+    // console.log(ctx);
+
+  }
+
+  fbsetup(){
+
+   window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1139153696273726',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v4.0'
+    });
+      
+    FB.AppEvents.logPageView();   
+
+    
+    FB.getLoginStatus(function(response) {
+          // statusChangeCallback(response);
+      });
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+    
+  // var p1= document.querySelector('p');
+  // function statusChangeCallback(data){
+  //     if (data.status == 'connected')
+  //     p1.textContent='connected';
+      
+  //     else if(data.status == 'not_authorized')
+  //     p1.textContent='not_authorized';
+
+  //     else if(data.status == 'unknown')
+  //     p1.textContent='unknown';
+  // }
+
+}
+
+fbAuthenticate(fbid){
+  FB.login(function(response) {
+    if (response.status === 'connected') {
+      this._ctx.invokeCallback(
+        fbid, // callback id, passed to the method
+        ['true']
+      );
+      console.log(response.authResponse);
+     } else {
+      // console.log(id);
+       // The person is not logged into your webpage or we are unable to tell. 
+       this._ctx.invokeCallback(
+        fbid, // callback id, passed to the method
+        ['false']
+      );
+     
+     }
+   });
+}
+
+
 }
 
 
