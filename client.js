@@ -172,9 +172,9 @@ class fbAuth extends Module{
 
   }
 
-  fbsetup(){
+  fbsetup(id){
 
-   window.fbAsyncInit = function() {
+   window.fbAsyncInit = () => {
     FB.init({
       appId      : '1139153696273726',
       cookie     : true,
@@ -185,40 +185,47 @@ class fbAuth extends Module{
     FB.AppEvents.logPageView();   
 
     
-    FB.getLoginStatus(function(response) {
-          // statusChangeCallback(response);
+    FB.getLoginStatus((response) => {
+       handleStatus(response,this);
+      // console.log(response.status)
       });
       
   };
 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));
-    
-  // var p1= document.querySelector('p');
-  // function statusChangeCallback(data){
-  //     if (data.status == 'connected')
-  //     p1.textContent='connected';
-      
-  //     else if(data.status == 'not_authorized')
-  //     p1.textContent='not_authorized';
+  
+   function handleStatus(response,that){
+    console.log("check status",response.status);
+      if (response.status == 'connected'){
+        that._ctx.invokeCallback(
+          id, // callback id, passed to the method
+          [true]
+        );
+      }  
+      else{
+        that._ctx.invokeCallback(
+          id, // callback id, passed to the method
+          [false]
+        );
+      }
+          
+  }
 
-  //     else if(data.status == 'unknown')
-  //     p1.textContent='unknown';
-  // }
+  (function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+ }(document, 'script', 'facebook-jssdk'));
 
 }
 
 fbAuthenticate(fbid){
-  FB.login(function(response) {
+  FB.login((response) => {
     if (response.status === 'connected') {
       this._ctx.invokeCallback(
         fbid, // callback id, passed to the method
-        ['true']
+        [true]
       );
       console.log(response.authResponse);
      } else {
@@ -226,7 +233,7 @@ fbAuthenticate(fbid){
        // The person is not logged into your webpage or we are unable to tell. 
        this._ctx.invokeCallback(
         fbid, // callback id, passed to the method
-        ['false']
+        [false]
       );
      
      }

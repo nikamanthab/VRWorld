@@ -20,11 +20,11 @@ class Left extends React.Component{
         movies = this.props.movies;
         list = movies.map((ele,i)=>{
             return(
-                <View style={styles.greetingBox}>
+                <View key={i} style={styles.greetingBox}>
                     <VrButton style={styles.card} onClick={()=>this.props.changePage("video",ele.name)}>
-                        <View>
+                        {/* <View>
                             <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
-                        </View>
+                        </View> */}
                         <View>
                             <Text style={styles.greeting}>
                                 {ele.name}
@@ -36,8 +36,19 @@ class Left extends React.Component{
         })
 
         return(
-            <View style={styles.panel}>   
-                <Text style={{backgroundColor:"black"}}>Friends</Text>            
+            <View style={[styles.panel]}>   
+                <View style={styles.greetingBox}>
+                    <VrButton style={[styles.card]}>
+                        {/* <View>
+                            <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
+                        </View> */}
+                        <View>
+                            <Text style={[styles.greeting, {color: '#282828' }]}>
+                                Friends
+                            </Text>
+                        </View>
+                    </VrButton>
+                </View>
                 {list}
             </View>
         )
@@ -56,17 +67,18 @@ const styles = StyleSheet.create({
     },
     greetingBox: {
       padding: 20,
-      margin:10,
-      backgroundColor: '#000000',
+      marginHorizontal:10,
+      backgroundColor: 'rgba(242, 247, 252,0.8)',
       borderColor: '#639dda',
-      borderWidth: 2,
+      borderTopWidth: 1,
     },
     greeting: {
       fontSize: 30,
+      color:'#475993'
     },
     card:{
         width:300,
-        flexDirection:"row"
+        // flexDirection:"row"
         // height: 50
     },
     thumbnail:{

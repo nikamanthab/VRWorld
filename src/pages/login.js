@@ -9,29 +9,41 @@ import {
     asset,
     NativeModules,
   } from 'react-360';
+  
 
   const fbAuth= NativeModules.fbAuth;
 
 class LoginPage extends React.Component{
   state={
-    login: false,
+    checkStatus: null,
   }
    componentDidMount(){
-        fbAuth.fbsetup();
+        console.log("in comp");
+        fbAuth.fbsetup( val => {
+          console.log("in comp",val)
+          this.setState({
+            checkStatus: val
+          });
+        });
    }
    handleAuth(){
-    fbAuth.fbAuthenticate((val) => {
-      this.setState({
-        login: val,
+     console.log("blah",this.state.checkStatus)
+     if(this.state.checkStatus){
+      this.props.login();
+     }
+     else{
+      fbAuth.fbAuthenticate((val) => {
+        if(val){
+         this.props.login();
+        }
       });
-    });
-    this.props.login();
+      // this.props.login();
+    }
+    
    }
 
     render = ()=>{
-        if(this.state.login){
-          this.props.login
-        }
+       
         return(
             <View style={styles.panel}>
                 <View style={styles.greetingBox}>

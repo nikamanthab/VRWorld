@@ -1,8 +1,17 @@
 export const friends = [
     {   
-        name:"titanic",
+        name:"Kanishq",
         description:"die for love"
     },{
-        name:"spiderman2",
+        name:"Mohan",
         description:"with great power comes great responsibilities"
+    },{   
+        name:"AK",
+        description:"die for love"
+    },{   
+        name:"Rakesh",
+        description:"die for love"
+    },{   
+        name:"Kanishq",
+        description:"die for love"
     }]
