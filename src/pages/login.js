@@ -5,7 +5,9 @@ import {
     Text,
     View,
     VrButton,
-    NativeModules
+    Image,
+    asset,
+    NativeModules,
   } from 'react-360';
 
   const fbAuth= NativeModules.fbAuth;
@@ -39,9 +41,10 @@ class LoginPage extends React.Component{
                 </View>
 
                 <View style={styles.greetingBox}>
-                    <VrButton onClick={() => this.handleAuth()}>
+                    <VrButton style={{ flexDirection: 'row', justifyContent:'space-between'}} onClick={() => this.handleAuth()}>
+                        <Image  style={{height: 40,width: 40, marginRight: 20}} source={asset('facebook.png')} />
                         <Text style={styles.greeting}>
-                            FbLogin
+                               Login
                         </Text>
                     </VrButton>
                 </View>
@@ -63,12 +66,15 @@ const styles = StyleSheet.create({
     greetingBox: {
       padding: 20,
       margin:10,
-      backgroundColor: '#4267b2',
-      borderColor: '#4267b2',
+      backgroundColor: 'white',
+      borderColor: 'white',
       borderWidth: 2,
     },
     greeting: {
       fontSize: 30,
+      color: '#475993',
+      fontWeight: 'bold',
+      paddingLeft: 10,
     },
   });
 
