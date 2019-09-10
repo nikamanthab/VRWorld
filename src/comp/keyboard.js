@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
     keytext:{
         justifyContent:"center",
         alignItems:"center",
-        textAlign:"center"
     },
     enter:{
         backgroundColor:"black",

@@ -2,7 +2,7 @@
 // If you want to modify your application's content, start in "index.js"
 
 // const url = "peerjs-server-api.herokuapp.com";
-const url = "localhost:3300";
+const url = "peerjs-server-api.herokuapp.com";
 import io from 'socket.io-client';
   import {validateCommand,getCommand} from './speech-recognition/p5speech/trie';
 
@@ -21,7 +21,7 @@ import {
 // import WebVRPolyfill from 'webvr-polyfill';
 // const polyfill = new WebVRPolyfill();
 
-console.log("Peer:", Peer);
+// console.log("Peer:", Peer);
 console.log("io:", io);
 
 function init(bundle, parent, options = {}) {
@@ -135,9 +135,6 @@ class speechRecognition extends Module{
 
   main(){
     //UTIL
-    // function createPassage (string) {
-    //   speechParagraph.innerText = string;
-    // }
 
     //MAIN
     function gotSpeech () {
@@ -145,8 +142,8 @@ class speechRecognition extends Module{
         clearTimeout(timeoutID);
         speechString = speechRec.resultString;
         timeoutID = setTimeout(function () {
+          console.log("hullo",speechString);
           console.log(getCommand(validateCommand(speechString)));
-          // createPassage(speechString);
         }, 1400);
       }
     }
@@ -186,29 +183,24 @@ class fbAuth extends Module{
 
     
     FB.getLoginStatus((response) => {
-       handleStatus(response,this);
-      // console.log(response.status)
-      });
-      
-  };
-
-  
-   function handleStatus(response,that){
-    console.log("check status",response.status);
+      console.log("check status",response.status);
       if (response.status == 'connected'){
-        that._ctx.invokeCallback(
+        this._ctx.invokeCallback(
           id, // callback id, passed to the method
           [true]
         );
       }  
       else{
-        that._ctx.invokeCallback(
+        this._ctx.invokeCallback(
           id, // callback id, passed to the method
           [false]
         );
       }
           
-  }
+      });
+      
+  };
+
 
   (function(d, s, id){
     var js, fjs = d.getElementsByTagName(s)[0];
@@ -229,7 +221,6 @@ fbAuthenticate(fbid){
       );
       console.log(response.authResponse);
      } else {
-      // console.log(id);
        // The person is not logged into your webpage or we are unable to tell. 
        this._ctx.invokeCallback(
         fbid, // callback id, passed to the method

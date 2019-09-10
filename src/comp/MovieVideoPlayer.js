@@ -17,7 +17,7 @@ import {
 class Left extends React.Component{
 
     componentDidMount = ()=>{
-      console.log(validateCommand);
+      // console.log(validateCommand);
       speechRecognition.main();
     }
 
