@@ -15,6 +15,7 @@ import createGlyph from 'createGlyph';
 import type {VideoPlayerStatus, VideoStatusEvent} from 'VideoModule';
 import io from 'socket.io-client';
 const peerAudioModule = NativeModules.peerAudioModule;
+const speechRecognition = NativeModules.speechRecognition;
 
 
 
@@ -239,11 +240,40 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     }
   }
 
+  incVol(val){
+    if(val >= 1)
+    return 1;
+    else if(val <= 0)
+    return 0;
+    else
+    return val;
+  }
   
   componentDidMount() {
     console.log("Fuckkkkkkkkkkkkkkkk Jooooooooooooo")
     // console.log();
     // this.props.player.pause()
+    speechRecognition.main( (val) => {
+      if(val == "play"){
+        this.props.player.resume();
+
+      }
+      else if(val == "pause"){
+        this.props.player.pause();
+      }
+      else if(val == "v+"){
+        this.props.player.setVolume(this.incVol(this.state.volume + 0.2));
+
+      }
+      else if(val == "v-"){
+
+        this.props.player.setVolume(this.incVol(this.state.volume - 0.2));
+      }
+      else if(! isNaN(val)){
+
+        this.props.player.seek(val);
+      }
+    });
     peerAudioModule.socketPause(()=>  this.props.player.pause() )
     peerAudioModule.socketPlay((arg)=> this.myplay(arg))
     peerAudioModule.socketSeek((arg)=>{this.props.player.seek(arg)})

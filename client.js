@@ -132,18 +132,34 @@ class speechRecognition extends Module{
     // console.log(ctx);
 
   }
+ 
 
-  main(){
+  main(id){
     //UTIL
-
+     
     //MAIN
-    function gotSpeech () {
+     gotSpeech =()=> {
       if(speechRec.resultValue){
         clearTimeout(timeoutID);
         speechString = speechRec.resultString;
-        timeoutID = setTimeout(function () {
+        timeoutID = setTimeout(() => {
           console.log("hullo",speechString);
-          console.log(getCommand(validateCommand(speechString)));
+          var command = getCommand(validateCommand(speechString));
+          console.log(this._ctx.executor.invoke);
+          console.log(this._ctx.executor._worker);
+
+          var msg = JSON.stringify({
+            cmd: 'invoke',
+            id: id,
+            args: [command]
+          });
+
+          this._ctx.executor._worker.postMessage(msg);
+
+          // this._ctx.executor.invoke(
+          //   id, // callback id, passed to the method
+          //   [command]
+          // );
         }, 1400);
       }
     }
@@ -158,6 +174,7 @@ class speechRecognition extends Module{
     speechRec.start(continuous, interim);
 
   }
+
 }
 
 class fbAuth extends Module{

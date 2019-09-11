@@ -12,13 +12,13 @@ import {
   import {validateCommand,getCommand} from './../../speech-recognition/p5speech/trie';
   import {VideoPlayer} from './../videoModules/index';
 
-  const speechRecognition = NativeModules.speechRecognition;
+  // const speechRecognition = NativeModules.speechRecognition;
 
 class Left extends React.Component{
 
     componentDidMount = ()=>{
       // console.log(validateCommand);
-      speechRecognition.main();
+      // speechRecognition.main();
     }
 
     render = ()=>{
