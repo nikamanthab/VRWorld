@@ -282,14 +282,15 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
   socTrigger = ()=>{
     peerAudioModule.socketPause((type,val)=>{
       if(type == "pause"){
+        console.log("gummma gummma")
         this.props.player.pause()
       }
       else if(type == "play"){
-        console.log("play triggered")
+        console.log("play triggered:",val);
         this.props.player.seek(val);
-        this.props.player.play();
+        this.props.player.resume();
       }
-
+      this.socTrigger();
     })
   }
 
@@ -425,7 +426,7 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     // this.props.player.seek(0.8*this.state.duration);
     if (this.props.player) {
       if (this._isPlaying()) {
-        peerAudioModule.socketControll({status: "pause",position: this.state.position});
+        peerAudioModule.socketControll({status: "paused",position: this.state.position});
         this.props.player.pause();
       } else {
         peerAudioModule.socketControll({status: "playing",position: this.state.position});
