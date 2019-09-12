@@ -1,0 +1,8 @@
+.DS_Store
+*~
+*.log
+*.js.meta
+*.mp4
+node_modules/
+build/
+static_assets/movies/
