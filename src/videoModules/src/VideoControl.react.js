@@ -279,15 +279,29 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     });
   }
 
+  socTrigger = ()=>{
+    peerAudioModule.socketPause((type,val)=>{
+      if(type == "pause"){
+        this.props.player.pause()
+      }
+      else if(type == "play"){
+        console.log("play triggered")
+        this.props.player.seek(val);
+        this.props.player.play();
+      }
+
+    })
+  }
 
   componentDidMount = ()=> {
     // this.props.player.pause();
     console.log("Fuckkkkkkkkkkkkkkkk Jooooooooooooo");
     // console.log();
     this.speechLogic()
-    // peerAudioModule.socketPause(()=>  this.props.player.pause() )
-    // peerAudioModule.socketPlay((arg)=> this.myplay(arg))
-    // peerAudioModule.socketSeek((arg)=>{this.props.player.seek(arg)})
+    this.socTrigger()
+    // this.socSeek()
+    // this.socPlay()
+    
   }
 
   // componentDidUpdate = ()=>{
@@ -411,11 +425,11 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     // this.props.player.seek(0.8*this.state.duration);
     if (this.props.player) {
       if (this._isPlaying()) {
-        this.props.player.pause();
         peerAudioModule.socketControll({status: "pause",position: this.state.position});
+        this.props.player.pause();
       } else {
-        this.props.player.resume();
         peerAudioModule.socketControll({status: "playing",position: this.state.position});
+        this.props.player.resume();
       }
     }
   };

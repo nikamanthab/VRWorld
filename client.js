@@ -298,8 +298,8 @@ class peerAudioModule extends Module {
     }
   }
 
-  socketPause(pauseid){
-    console.log("huo",pauseid)
+  socketPause(id){
+    console.log("huo",id)
     socket.on("controlUpdate", (obj) => {
       // this._ctx.invokeCallback(
       //   manoverid, // callback id, passed to the method
@@ -308,25 +308,21 @@ class peerAudioModule extends Module {
       if (obj.id === socket.id)
           return;
       console.log(obj);
-      // if (obj.action === "play") {
-          // this._ctx.invokeCallback(
-          //   seekid, // callback id, passed to the method
-          //   [obj.currentTime]
-          // );
-          // this._ctx.invokeCallback(
-          //   resumeid, // callback id, passed to the method
-          //   []
-          // );
-          // vid.play().catch();
-      // }
+      if (obj.action === "play") {
+        // console.log("play triggered")
+        this._ctx.invokeCallback(
+          id, // callback id, passed to the method
+          ["play",obj.currentTime]
+        );
+      } 
       if (obj.action === "pause") {
           // this._ctx.invokeCallback(
           //   seekid, // callback id, passed to the method
           //   [obj.currentTime]
           // );
           this._ctx.invokeCallback(
-            pauseid, // callback id, passed to the method
-            []
+            id, // callback id, passed to the method
+            ["pause"]
           );
           // vid.pause();
       }
@@ -340,35 +336,35 @@ class peerAudioModule extends Module {
   });
   }
 
-  socketPlay(playid){
-    socket.on("controlUpdate", (obj) => {
+  // socketPlay(playid){
+  //   socket.on("controlUpdate", (obj) => {
       
-      if (obj.id === socket.id)
-          return;
-      console.log(obj);
-      if (obj.action === "play") {
-          this._ctx.invokeCallback(
-            playid, // callback id, passed to the method
-            [obj.currentTime]
-          );
-      }
-  });
-  }
+  //     if (obj.id === socket.id)
+  //         return;
+  //     console.log(obj);
+  //     if (obj.action === "play") {
+  //         this._ctx.invokeCallback(
+  //           playid, // callback id, passed to the method
+  //           [obj.currentTime]
+  //         );
+  //     }
+  // });
+  // }
 
-  socketSeek(seekid){
-    socket.on("controlUpdate", (obj) => {
+  // socketSeek(seekid){
+  //   socket.on("controlUpdate", (obj) => {
       
-      if (obj.id === socket.id)
-          return;
-      console.log(obj);
-      if (obj.action === "play") {
-          this._ctx.invokeCallback(
-           seekid, // callback id, passed to the method
-            [obj.currentTime]
-          );
-        }
-    });
-  }
+  //     if (obj.id === socket.id)
+  //         return;
+  //     console.log(obj);
+  //     if (obj.action === "play") {
+  //         this._ctx.invokeCallback(
+  //          seekid, // callback id, passed to the method
+  //           [obj.currentTime]
+  //         );
+  //       }
+  //   });
+  // }
   
 
 
