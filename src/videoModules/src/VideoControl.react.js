@@ -214,6 +214,7 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
       playStatus: 'loading',
       duration: -1,
       position: -1,
+      counter: 0,
     };
     if (props.player) {
       this._registerEventListener(null, props.player);
@@ -278,10 +279,11 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     });
   }
 
+
   componentDidMount = ()=> {
-    console.log("Fuckkkkkkkkkkkkkkkk Jooooooooooooo")
+    // this.props.player.pause();
+    console.log("Fuckkkkkkkkkkkkkkkk Jooooooooooooo");
     // console.log();
-    // this.props.player.pause()
     this.speechLogic()
     // peerAudioModule.socketPause(()=>  this.props.player.pause() )
     // peerAudioModule.socketPlay((arg)=> this.myplay(arg))
@@ -359,6 +361,12 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
   _onVideoStatusChanged = (event: VideoStatusEvent) => {
     const {duration, isMuted, position, status, volume} = event;
 
+    console.log(position,this.state.position);
+    
+    if(status == "ready" && this.state.counter == 0){
+      this.props.player.pause();
+      this.setState({counter : this.state.counter + 1});
+    }
     if(this.state.manover){
       this.changeManOver(false)
     }
@@ -404,8 +412,10 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     if (this.props.player) {
       if (this._isPlaying()) {
         this.props.player.pause();
+        peerAudioModule.socketControll({status: "pause",position: this.state.position});
       } else {
         this.props.player.resume();
+        peerAudioModule.socketControll({status: "playing",position: this.state.position});
       }
     }
   };
@@ -436,10 +446,12 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
   _onClickProgress = progress => {
     if (this.props.player && this.state.duration) {
       this.props.player.seek(this.state.duration * progress);
+      peerAudioModule.socketControll({status: "ready",position: this.state.position});
     }
   };
 
   render() {
+    // this.props.player.pause(); 
     const playButtonIcon = this._isPlaying() ? IMAGE_PAUSE : IMAGE_PLAY;
     const muteButonIcon = this.state.isMuted ? IMAGE_MUTE : IMAGE_UNMUTE;
     const videoProgress =
