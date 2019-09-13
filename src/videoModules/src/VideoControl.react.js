@@ -296,6 +296,9 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
         this.props.player.seek(val);
         this.props.player.resume();
       }
+      else if(type== "seek"){
+        this.props.player.seek(val);
+      }
      this.socTrigger();
     })
   }
@@ -370,15 +373,16 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
   _onVideoStatusChanged = (event: VideoStatusEvent) => {
     const {duration, isMuted, position, status, volume, isBuffering} = event;
     
-    // if(isBuffering !== this.state.isBuffering){
-    //   if(isBuffering){
-    //     this.props.player.pause();
-    //     peerAudioModule.socketControll({status: "paused",position: this.state.position})
-    //   }
-    //   else{
-    //     this.props.player.resume();
-    //   }
-    // }
+    if(isBuffering !== this.state.isBuffering){
+      if(isBuffering){
+        // this.props.player.pause();
+        // peerAudioModule.socketControll({status: "paused",position: this.state.position})
+      }
+      else{
+        // this.props.player.resume();
+        // peerAudioModule.socketControll({status: "playing",position: this.state.position})
+      }
+    }
     console.log(position,this.state.position);
     
     if(status == "ready" && this.state.counter == 0){
@@ -464,7 +468,7 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     if (this.props.player && this.state.duration) {
       console.log("clicked hhbdhbdhbhdb")
       this.props.player.seek(this.state.duration * progress);
-      peerAudioModule.socketControll({status: "ready",position: this.state.position});
+      peerAudioModule.socketControll({status: "playing",position: this.state.position});
     }
   };
 
