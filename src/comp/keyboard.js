@@ -8,13 +8,13 @@ import {
     Image,
     asset,
   } from 'react-360';
-
+import {changeSearchText} from './../../store';
 
 
 class Keyboard extends React.Component{
 
     state = {
-        text: "",
+        // text: "",
         num:['1','2','3','4','5','6','7','8','9'],
         alpha1: ['q','w','e','r','t','y','u','i','o','p'],
         alpha2: ['a','s','d','f','g','h','j','k','l'],
@@ -23,17 +23,19 @@ class Keyboard extends React.Component{
 
     //input handlers
     handleChangeText = (input)=>{
-        this.setState({
-            text: this.state.text+input
-        })
+        // this.setState({
+        //     text: this.state.text+input
+        // })
+        changeSearchText(this.props.text+input)
     }
 
     handleBackspace = ()=>{
-        let input = this.state.text;
+        let input = this.props.text;
         input = input.slice(0,input.length-1)
-        this.setState({
-            text:input
-        })
+        changeSearchText(input)
+        // this.setState({
+        //     text:input
+        // })
     }
 
     renderKeys = (alpha) => {
@@ -53,7 +55,7 @@ class Keyboard extends React.Component{
     
     render = ()=>{
         let inputtext = <View></View>
-        if(this.state.text === ""){
+        if(this.props.text === ""){
             inputtext = (<Text 
                     style = {styles.searchBox}>
                     {"type..."}
@@ -62,7 +64,7 @@ class Keyboard extends React.Component{
         else{
             inputtext = (<Text 
                     style = {styles.searchBox}>
-                    {this.state.text}
+                    {this.props.text}
             </Text>  )
         }
         return(

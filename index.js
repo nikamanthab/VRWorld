@@ -43,6 +43,7 @@ export default class CooperPlaza extends React.Component {
         <HomePage
           changePage = {changePage}
           movies = {this.props.movies}
+          searchtext={this.props.searchtext}
         />
       )
     }
@@ -62,17 +63,19 @@ class RightPanel extends React.Component {
       page=(
         <View>
           <Right
+            title={"global"}
+            searchtext={this.props.searchtext}
             changePage = {changePage}
             movies={this.props.global}
           />
         </View>
       )
     }
-    if(this.props.page === "video"){
-      <View>
-        <ConnectedPeople/>
-      </View>
-    }
+    // if(this.props.page === "video"){
+    //   <View>
+    //     <ConnectedPeople/>
+    //   </View>
+    // }
     return (
       <View>
         {page}
@@ -80,6 +83,29 @@ class RightPanel extends React.Component {
     );
   }
 };
+
+class FriendsPanel extends React.Component{
+  render() {
+    let page = <View></View>;
+    if(this.props.page === "home"){
+      page=(
+        <View>
+          <Right
+            title={"friends"}
+            searchtext={this.props.searchtext}
+            changePage = {changePage}
+            movies={this.props.global}
+          />
+        </View>
+      )
+    }
+    return (
+      <View>
+        {page}
+      </View>
+    );
+  }
+}
 
 class LeftPanel extends React.Component {
 
@@ -92,6 +118,7 @@ class LeftPanel extends React.Component {
           <Left
             changePage = {changePage}
             movies={this.props.friends}
+            searchtext={this.props.searchtext}
           />
         </View>
       )
@@ -103,6 +130,7 @@ class LeftPanel extends React.Component {
     );
   }
 };
+
 
 class VideoPanel extends React.Component{
   render = ()=>{
@@ -165,9 +193,14 @@ class PeoplePanel extends React.Component{
     let page = <View></View>
     if(this.props.page === "video"){
       page = (
-      <People
-        people={this.props.people}
-      />
+        <Left
+            changePage = {changePage}
+            movies={this.props.friends}
+            searchtext={this.props.searchtext}
+          />
+      // <People
+      //   people={this.props.people}
+      // />
       )
     }
     return(
@@ -203,7 +236,9 @@ class KeyboardPanel extends React.Component{
     let page = <View></View>
     if(this.props.page === "home"){
       page = (
-      <Keyboard/>
+      <Keyboard
+        text={this.props.searchtext}
+      />
       )
     }
     
@@ -224,7 +259,7 @@ const ConnectedInfo = connect(Info);
 const ConnectedPeople = connect(PeoplePanel);
 const ConnectedRatingPanel = connect(RatingPanel);
 const ConnectedKeyboard = connect(KeyboardPanel);
-
+const ConnectedFriendsPanel = connect(FriendsPanel);
 
 
 
@@ -237,4 +272,5 @@ AppRegistry.registerComponent('ConnectedInfo', ()=> ConnectedInfo);
 AppRegistry.registerComponent('ConnectedPeople', ()=> ConnectedPeople);
 AppRegistry.registerComponent('ConnectedRatingPanel', ()=> ConnectedRatingPanel);
 AppRegistry.registerComponent('ConnectedKeyboard', ()=> ConnectedKeyboard);
+AppRegistry.registerComponent('ConnectedFriendsPanel', ()=> ConnectedFriendsPanel);
 

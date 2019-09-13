@@ -19,18 +19,31 @@ class Left extends React.Component{
 
         movies = this.props.movies;
         list = movies.map((ele,i)=>{
+
+            let friendbtn = (<VrButton style={styles.card} onCLick={()=>{}}>
+                    <Text>Add Friend</Text>
+                </VrButton>)
+            if(ele.friend == true){
+                friendbtn = (<VrButton style={styles.card} onClick={()=>{}}>
+                    <Text>remove</Text>
+                </VrButton>)
+            }
+
+
             return(
                 <View key={i} style={styles.greetingBox}>
-                    <VrButton style={styles.card} onClick={()=>this.props.changePage("video",ele.name)}>
                         {/* <View>
                             <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
                         </View> */}
+                        <View>
+                            <Image style={styles.thumbnail} source={asset(`profilepic/nitin.jpg`)} />
+                        </View>
                         <View>
                             <Text style={styles.greeting}>
                                 {ele.name}
                             </Text>
                         </View>
-                    </VrButton>
+                        {friendbtn}
                 </View>
             )
         })
@@ -50,6 +63,12 @@ class Left extends React.Component{
                     </VrButton>
                 </View>
                 {list}
+                {/* CALL ALL THE FETCH INSTRUCTIONS IN STORE JS */}
+                <VrButton onClick={()=>{console.log(this.props.searchtext)}}>
+                    <Text>
+                        search
+                    </Text>
+                </VrButton>
             </View>
         )
     }
@@ -71,18 +90,20 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(242, 247, 252,0.8)',
       borderColor: '#639dda',
       borderTopWidth: 1,
+      flexDirection:"row"
     },
     greeting: {
       fontSize: 30,
       color:'#475993'
     },
     card:{
-        width:300,
+        width:200,
         // flexDirection:"row"
         // height: 50
     },
     thumbnail:{
-        width:100,
+        borderRadius:50,
+        width:50,
         height:50
     }
   });

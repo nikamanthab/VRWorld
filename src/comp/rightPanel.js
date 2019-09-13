@@ -31,8 +31,13 @@ class Right extends React.Component{
 
         return(
             <View style={styles.panel}>      
-                <Text style={{backgroundColor:"black"}}>Global</Text>         
+                <Text style={{backgroundColor:"black"}}>{this.props.title}</Text>         
                 {list}
+                <VrButton onClick={()=>{console.log(this.props.searchtext)}}>
+                    <Text>
+                        search
+                    </Text>
+                </VrButton>
             </View>
         )
     }
