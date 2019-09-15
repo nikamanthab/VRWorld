@@ -37,7 +37,7 @@ class LoginPage extends React.Component{
          this.props.login();
         }
       });
-      this.props.login();
+      // this.props.login();
     }
     
    }

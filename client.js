@@ -4,7 +4,8 @@
 // const url = "peerjs-server-api.herokuapp.com";
 const url = "peerjs-server-api.herokuapp.com";
 import io from 'socket.io-client';
-  import {validateCommand,getCommand} from './speech-recognition/p5speech/trie';
+import {validateCommand,getCommand} from './speech-recognition/p5speech/trie';
+import {controller,register as fireregister} from "./firebase-lib";
 
 // import Peer from 'peerjs';
 // import React from 'react';
@@ -140,7 +141,7 @@ class speechRecognition extends Module{
     // console.log(ctx);
 
   }
- 
+   
 
   main(id){
     //UTIL
@@ -192,6 +193,15 @@ class fbAuth extends Module{
     super('fbAuth');
     this._ctx = ctx;
     // console.log(ctx);
+    this.firlibConfig = {
+      apiKey: "AIzaSyDxUdsBOiWl41ASEHweGZdhdCZtXDvPOg8",
+      authDomain: "vr-theatre.firlibapp.com",
+      databaseURL: "https://vr-theatre.firlibio.com",
+      projectId: "vr-theatre",
+      storageBucket: "",
+      messagingSenderId: "69732209271",
+      appId: "1:69732209271:web:72b6bf3a671d3b8f43ec72"
+    };
 
   }
 
@@ -210,12 +220,23 @@ class fbAuth extends Module{
     
     FB.getLoginStatus((response) => {
       console.log("check status",response.status);
-      if (response.status == 'connected'){
-        this._ctx.invokeCallback(
-          id, // callback id, passed to the method
-          [true]
-        );
-      }  
+      if (response.status == 'connected'){  
+        FB.api(
+          response.authResponse.userID,
+          (response) => {
+            if (response && !response.error) {
+              // console.log("here",data);
+              console.log("hi theeee",response);
+              controller(this.firlibConfig,response.id)
+              this._ctx.invokeCallback(
+                id, // callback id, passed to the method
+                [true]
+              );
+
+            }
+          }
+      );
+      }
       else{
         this._ctx.invokeCallback(
           id, // callback id, passed to the method
@@ -241,12 +262,36 @@ class fbAuth extends Module{
 fbAuthenticate(fbid){
   FB.login((response) => {
     if (response.status === 'connected') {
-      this._ctx.invokeCallback(
-        fbid, // callback id, passed to the method
-        [true]
+      console.log("login hit");
+      FB.api(
+        response.authResponse.userID,
+        (response) => {
+          if (response && !response.error) {
+            console.log("hi theeee",response.name,response.id);// code here
+
+            controller(this.firlibConfig,response.id);
+            console.log("after init");
+            console.log(fireregister);
+            fireregister(response.name,"http://graph.facebook.com/"+response.id+"/picture?type=large&width=720&height=720").then(data =>{
+              if(data){
+              console.log("registered");
+              this._ctx.invokeCallback(
+                fbid, // callback id, passed to the method
+                [true]
+              );
+            }
+            })
+          }
+        }
       );
+
+      // this._ctx.invokeCallback(
+      //   fbid, // callback id, passed to the method
+      //   [true]
+      // );
       console.log(response.authResponse);
-     } else {
+     } 
+     else {
        // The person is not logged into your webpage or we are unable to tell. 
        this._ctx.invokeCallback(
         fbid, // callback id, passed to the method
