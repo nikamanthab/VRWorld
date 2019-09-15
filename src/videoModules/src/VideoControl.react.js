@@ -275,11 +275,12 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
       }
       else if(! isNaN(val)){
         // this.props.player.seek(this.state.duration*val/100);
-        this.setState({position: val});
-        this.props.player.seek(val);
 
-        peerAudioModule.socketControll({status: "ready",position: this.state.position});
-        this.props.player.resume();
+        peerAudioModule.socketControll({status: "ready",position: val});
+        this.props.player.seek(val);
+        // this.setState({position: val});
+
+        // this.props.player.resume();
       }
 
       this.speechLogic();
@@ -373,15 +374,16 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
   _onVideoStatusChanged = (event: VideoStatusEvent) => {
     const {duration, isMuted, position, status, volume, isBuffering} = event;
     
-    // if(isBuffering !== this.state.isBuffering){
-    //   if(isBuffering){
-    //     this.props.player.pause();
-    //     peerAudioModule.socketControll({status: "paused",position: this.state.position})
-    //   }
-    //   else{
-    //     this.props.player.resume();
-    //   }
-    // }
+    if(isBuffering !== this.state.isBuffering){
+      if(isBuffering){
+        // this.props.player.pause();
+        // peerAudioModule.socketControll({status: "paused",position: this.state.position})
+      }
+      else{
+        // this.props.player.resume();
+        // peerAudioModule.socketControll({status: "playing",position: this.state.position})
+      }
+    }
     console.log(position,this.state.position);
     
     if(status == "ready" && this.state.counter == 0){

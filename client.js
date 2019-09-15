@@ -55,20 +55,28 @@ function init(bundle, parent, options = {}) {
     mainSurface
   );
 
-  const rightPanel = new Surface(400, 600, Surface.SurfaceShape.Flat)
-  rightPanel.setAngle(-1.2, 0)
+  const leftPanel = new Surface(400, 600, Surface.SurfaceShape.Flat)
+  leftPanel.setAngle(-1.2, 0)
   r360.renderToSurface(
     r360.createRoot('ConnectedLeftPanel', {
+      /* initial props */ }),
+    leftPanel
+  );
+
+  const rightPanel = new Surface(400, 600, Surface.SurfaceShape.Flat)
+  rightPanel.setAngle(1, 0)
+  r360.renderToSurface(
+    r360.createRoot('ConnectedRightPanel', {
       /* initial props */ }),
     rightPanel
   );
 
-  const leftPanel = new Surface(400, 600, Surface.SurfaceShape.Flat)
-  leftPanel.setAngle(1.2, 0)
+  const friendsRoomPanel = new Surface(400, 600, Surface.SurfaceShape.Flat)
+  friendsRoomPanel.setAngle(1.6, 0)
   r360.renderToSurface(
-    r360.createRoot('ConnectedRightPanel', {
+    r360.createRoot('ConnectedFriendsPanel', {
       /* initial props */ }),
-    leftPanel
+      friendsRoomPanel
   );
 
   const closePanel = new Surface(1000, 500, Surface.SurfaceShape.Flat)
@@ -88,8 +96,8 @@ function init(bundle, parent, options = {}) {
 
   )
 
-  const PeoplePanel = new Surface(1000, 600, Surface.SurfaceShape.Flat)
-  PeoplePanel.setAngle(-1, 0)
+  const PeoplePanel = new Surface(400, 600, Surface.SurfaceShape.Flat)
+  PeoplePanel.setAngle(-1.2, 0)
   r360.renderToSurface(
     r360.createRoot('ConnectedPeople', {}),
     PeoplePanel
@@ -147,7 +155,7 @@ class speechRecognition extends Module{
           console.log("hullo",command);
           console.log(this._ctx.executor.invoke);
           console.log(this._ctx.executor._worker);
-
+          if(command){
           var msg = JSON.stringify({
             cmd: 'invoke',
             id: id,
@@ -155,6 +163,7 @@ class speechRecognition extends Module{
           });
 
           this._ctx.executor._worker.postMessage(msg);
+        };
 
           // this._ctx.executor.invoke(
           //   id, // callback id, passed to the method

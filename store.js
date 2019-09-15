@@ -10,6 +10,7 @@ import {
 console.log("hmmm",friends);
 
 const State = {
+    searchtext:"",
     page: "login",
     friends: friends,
     global: global,
@@ -39,6 +40,11 @@ setVideo = (movie)=>{
     State.people = ["mohan","jo","rya"];
 }
 
+export const changeSearchText = (text)=>{
+    State.searchtext = text;
+    updateComponents();
+}
+
 export const changePage = (selectedpage,movie) => {
     let pageName = selectedpage;
     State.page = pageName;
@@ -56,6 +62,7 @@ export const changePage = (selectedpage,movie) => {
 export const connect = (Component)=>{
     return class Wrapper extends React.Component{
         state = {
+            searchtext: State.searchtext,
             page: State.page,
             friends: State.friends,
             global: State.global,
@@ -67,6 +74,7 @@ export const connect = (Component)=>{
         _listener = ()=>{
             console.log("hmmm....")
             this.setState({
+                searchtext: State.searchtext,
                 page: State.page,
                 friends: State.friends,
                 global: State.global,
@@ -84,6 +92,7 @@ export const connect = (Component)=>{
             return(
                 <Component
                     {...this.props}
+                    searchtext = {this.state.searchtext}
                     page = {this.state.page}
                     global = {this.state.global}
                     friends = {this.state.friends}

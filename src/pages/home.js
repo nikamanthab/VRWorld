@@ -49,6 +49,11 @@ class Home extends React.Component{
              <VrButton style={styles.buttons}>
                <Text style={styles.greeting}>Down</Text>
              </VrButton>
+          <VrButton onClick={()=>{console.log(this.props.searchtext)}}>
+                    <Text>
+                        search
+                    </Text>
+                </VrButton>
           </View>
           </View>
         )
