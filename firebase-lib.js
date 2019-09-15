@@ -113,18 +113,29 @@ export const  acceptFriendreq = (friend) => {
 
 
 export const getFriends = (callback) => {
-    var promisearr = [];
+    var switcher = false;
     db.collection("friends").where("uid", "==", u)
         .onSnapshot(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-                promisearr.push(db.collection("users").where("uid", "==", doc.data().fuid).get())
-            });
-            Promise.all(promisearr).then(res => {
-                res.forEach((docs) => {
+            switcher = true;
+            querySnapshot.docs.forEach(function (doc, i,arr) {
+                db.collection("users").doc(doc.data().fuid).onSnapshot((docs) => {
+                    friends = friends.filter(x => {
+                        return x[1] != docs.id
+                    }) || [];
                     friends.push([docs.data(), docs.id]);
+                    console.log(switcher);
+                    console.log(querySnapshot.docs.length,i);
+                    if (!switcher)
+                        callback(friends);
+                    if (switcher) {
+                        if (arr.length == i+1) {
+                            callback(friends);
+                            switcher = false;
+                        }
+                    }
                 });
-                callback(friends);
-            })
+
+            });
         });
 }
 
