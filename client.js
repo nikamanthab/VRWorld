@@ -269,6 +269,9 @@ class fbAuth extends Module{
 }
 
 fbAuthenticate(fbid){
+  // let id = 452651015464681
+  
+  // console.log(this.someart)
   FB.login((response) => {
     if (response.status === 'connected') {
       console.log("login hit");

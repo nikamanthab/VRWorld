@@ -16,12 +16,12 @@ function filter(arr,friends) {
 
  const addFriend = (f) => {
     return new Promise((res, rej) => {
-        db.collection("friends").add({
+        db.collection("friends").doc().set({
             uid: u,
             fuid: f,
             status: false
         }).then(() => {
-            res.send("Friend added successfully");
+            res("Friend added successfully");
         }).catch((err) => rej(err));
     })
 }
@@ -94,9 +94,9 @@ const createWatchParty=(arr,movieid,friends)=>{
     });
 }
 
-const  acceptFriendreq = (friend) => {
+const acceptFriendreq = (friend) => {
     return new Promise((res, rej) => {
-        db.collection("friends").where("fuid", "==", u).where("uid", "==", friend).get().then((docs) => {
+        db.collection("friends").where("uid", "==", u).where("fuid", "==",friend).get().then((docs) => {
             docs.forEach((docr) => {
                 db.collection("friends").doc(docr.id).update({
                     status: true
@@ -142,16 +142,27 @@ const getFriends = (callback) => {
         });
 }
 
+const search=(frname,page,callback)=>{
+    db.collection("users").where("name","==",frname).limit(5*page).get().then((snap)=>{
+        var myarr=[];
+        snap.forEach((doc)=>{
+            myarr.push(doc.data());
+        });
+        myarr.slice(page*5-4,page*5+1);
+        callback(myarr);  
+    });
+}
 
 
 
-export default controller = (config, uid) => {
+
+export const controller = (config, uid) => {
     firebase.initializeApp(config);
     db = firebase.firestore();
     u = uid;
     console.log("firebase domeel");
     return {
-        getFriends,register,addFriend,acceptFriendreq
+        getFriends,register,addFriend,acceptFriendreq,search
     }
 }
 
