@@ -14,12 +14,17 @@ import {
   import search from './../../static_assets/search.png';
   import up from './../../static_assets/down.png';
   import {searchPeople,upClick,downClick} from './../../store';
-
+//   import {getFriendsList} from './../../store';
+// import {} from './../../store'
 
 class Left extends React.Component{
+    componentDidMount = ()=>{
+        console.log("did mount of left panel")
+        // getFriendsList()
+    }
 
     handleSearchClick = () => {
-        searchPeople(this.props.searchtext);
+        searchPeople();
     }
 
     handleUpClick = () => {
@@ -31,7 +36,7 @@ class Left extends React.Component{
     }
     
     render = ()=>{
-        console.log("bhaammmmmmmmmmmmmmmmmmmmmmmmmmm:",this.props.friends);
+        console.log("bhaammmmmmmmmmmmmmmmmmmmmmmmmmm:",this.props.friendsactive,this.props.people,this.props.friends);
         let list = <View></View>;
 
         if(this.props.friendsactive){
@@ -40,7 +45,7 @@ class Left extends React.Component{
         else{
             friends = this.props.people;
         }
-        console.log("booom:",this.props.searchtext)
+        console.log("booom:",this.props.searchtext,friends)
         list = friends.map((ele,i)=>{
             
             let onlinelogo = (ele[0].onlineStatus? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)

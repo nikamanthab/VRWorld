@@ -5,23 +5,25 @@ import {global} from './data/global';
 import {
     Environment,
     asset,
-    NativeModules
+    NativeModules,
 } from 'react-360';
 // import {getFriends} from './firebase-lib';
+const fbAuth= NativeModules.fbAuth;
+
 
 console.log("hmmm",friends);
 
 const State = {
-    someart:undefined,
+    // someart:undefined,
     userid:undefined,
     friendlistpage: 1,
     // userid:452651015464681,
     friendsactive:true,
     searchtext:"",
     page: "login",
-    friends: [],
-    allfriends: [],
-    people: [],
+    friends: null,
+    allfriends: null,
+    people: null,
     global: global,
     movies: movies,
     selectedMovie: "captainamerica",
@@ -38,8 +40,9 @@ const updateComponents = ()=>{
 }
 
 setHome = ()=>{
-    console.log("inside home")
-    State.people = [];
+    console.log("inside home");
+    getFriendsList();
+    State.people = []; //have to change this shit
 }
 
 setVideo = (movie)=>{
@@ -48,10 +51,9 @@ setVideo = (movie)=>{
     State.people = ["mohan","jo","rya"];
 }
 
-export const setUserId = (val,val2)=>{
+export const setUserId = (val)=>{
     State.userid = val;
-    State.someart = val2;
-    console.log("useridset:",val, someart);
+    console.log("useridset:",val);
     updateComponents();
 }
 
@@ -77,17 +79,31 @@ export const changePage = (selectedpage,movie) => {
     updateComponents();
 }
 
-export const getFriendsList = ()=>{
-    State.someart.getFriends(val => {
+friendsGen = ()=>{
+    fbAuth.getFriends(val => {
         console.log("Bangammmm:",val); //assumed
         State.allfriends = val;
         State.friends = val.slice(0,5);
+        console.log("trouser:",val.slice(0,5))
+        updateComponents(); // test this as inside callback - assumed
+    })
+    // friendsGen()
+}
+
+getFriendsList = ()=>{
+    console.log("yoyo")
+    // friendsGen();
+    fbAuth.getFriends(val => {
+        console.log("Bangammmm:",val); //assumed
+        State.allfriends = val;
+        State.friends = val.slice(0,5);
+        console.log("trouser:",val.slice(0,5))
         updateComponents(); // test this as inside callback - assumed
     })
 } 
 
-export const searchPeople = (search) => {
-    State.someart.search(search,State.friendlistpage,val=>{
+export const searchPeople = () => {
+    fbAuth.search(State.searchtext,State.friendlistpage,val=>{
         State.people = val; 
         State.friendsactive = false;
         updateComponents();
@@ -101,7 +117,7 @@ export const upClick = ()=>{
         updateComponents();
     }
     else{
-        State.someart.search(search,State.friendlistpage+1,val=>{
+        fbAuth.search(State.searchtext,State.friendlistpage+1,val=>{
             State.people = val; 
             State.friendsactive = false;
             State.friendlistpage = State.friendlistpage + 1; 
@@ -117,13 +133,39 @@ export const downClick = ()=>{
         updateComponents();
     }
     else{
-        State.someart.search(search,State.friendlistpage-1,val=>{
+        fbAuth.search(State.searchtext,State.friendlistpage-1,val=>{
             State.people = val; 
             State.friendsactive = false;
             State.friendlistpage = State.friendlistpage - 1; 
             updateComponents();
         })
     }
+}
+
+export const handleAuth = ()=>{
+    fbAuth.fbsetup( (val,val2) => {
+        console.log("in comp",val)
+        // this.setState({
+        //   checkStatus: val,
+        //   uid: val2
+        // });
+
+        if(val) {
+            setUserId(val2);
+            changePage("home");
+        }
+        else{
+            // console.log("blah",this.state.checkStatus)
+            fbAuth.fbAuthenticate((val,val2) => {
+                if(val){
+                console.log("boomboom:",val2);
+                setUserId(val2);
+                changePage("home")
+                }
+            });
+            // this.props.login();
+        }
+      });
 }
 
 

@@ -5,7 +5,7 @@
 const url = "peerjs-server-api.herokuapp.com";
 import io from 'socket.io-client';
 import {validateCommand,getCommand} from './speech-recognition/p5speech/trie';
-import {controller} from "./firebase-lib";
+// import {controller} from "./firebase-lib";
 
 // import Peer from 'peerjs';
 // import React from 'react';
@@ -187,12 +187,18 @@ class speechRecognition extends Module{
 
 }
 
+var friends = [];
+var pendingreq = [];
+var parties=[];
+
 class fbAuth extends Module{
 
   constructor(ctx){
     super('fbAuth');
     this._ctx = ctx;
-    this.someart = undefined;
+    this.db = undefined;
+    this.u = undefined;
+    // this.someart = undefined;
     // this.userid = 452651015464681;    
     // this.userid = undefined;
     // console.log(ctx);
@@ -235,13 +241,12 @@ class fbAuth extends Module{
               // console.log("here",data);
               console.log("hi theeee",response);
               this.userid = response.id;
-              this.someart=controller(this.firlibConfig,response.id)
+              this.controller(this.firlibConfig,response.id)
         
               this._ctx.invokeCallback(
                 id, // callback id, passed to the method
-                [true,response.id, this.someart]
+                [true,response.id]
               );
-
             }
           }
       );
@@ -252,9 +257,7 @@ class fbAuth extends Module{
           [false]
         );
       }
-          
-      });
-      
+    });
   };
 
 
@@ -268,9 +271,89 @@ class fbAuth extends Module{
 
 }
 
+controller = (config, uid) => {
+  firebase.initializeApp(config);
+  this.db = firebase.firestore();
+  this.u = uid;
+  console.log("firebase domeel");
+}
+
+register= (name,profilepic)=>{
+  return new Promise((res,rej)=>{
+      console.log("in there",this.u,name,profilepic,this.db);
+       this.db.collection("users").doc(this.u).set({
+          name,profilepic
+      }).then(()=>{
+          res(true);
+      });
+  });
+};
+
+filter(arr,friends) {
+  return arr.filter((x) => {
+   if(x.friends===friends){
+       return true;
+   }
+   })
+};
+
+getFriends(callbackid){
+  var switcher = false;
+  this.db.collection("friends").where("uid", "==", this.u)
+      .onSnapshot( (querySnapshot) => {
+          switcher = true;
+          querySnapshot.docs.forEach( (doc, i,arr) => {
+              let requestStatus=doc.data().status;
+              this.db.collection("users").doc(doc.data().fuid).onSnapshot((docs) => {
+                  friends = friends.filter(x => {
+                      return x[1] != docs.id
+                  }) || [];
+                  let payload=doc.data();
+                  payload.status=requestStatus;
+                  friends.push([payload, docs.id]);
+                  console.log(switcher);
+                  console.log(querySnapshot.docs.length,i);
+                  if (!switcher){
+                    this._ctx.invokeCallback(
+                      callbackid,
+                      [friends]
+                    )
+                  }
+                      // callback(friends);
+                  if (switcher) {
+                      if (arr.length == i+1) {
+                          this._ctx.invokeCallback(
+                            callbackid,
+                            [friends]
+                          );
+                          // callback(friends);
+                          switcher = false;
+                      }
+                  }
+              });
+
+          });
+      });
+}
+
+
+search=(frname,page,callbackid)=>{
+  this.db.collection("users").where("name","==",frname).limit(5*page).get().then((snap)=>{
+      var myarr=[];
+      snap.forEach((doc)=>{
+          myarr.push(doc.data());
+      });
+      myarr.slice(page*5-4,page*5+1);
+      this._ctx.invokeCallback(
+        callbackid,
+        [myarr]
+      )
+      // callback(myarr);  
+  });
+}
+
 fbAuthenticate(fbid){
   // let id = 452651015464681
-  
   // console.log(this.someart)
   FB.login((response) => {
     if (response.status === 'connected') {
@@ -281,15 +364,15 @@ fbAuthenticate(fbid){
           if (response && !response.error) {
             console.log("hi theeee",response.name,response.id);// code here
             userid = response.id;
-            this.someart = controller(this.firlibConfig,response.id);
+            this.controller(this.firlibConfig,response.id);
             console.log("after init");
-            console.log(fireregister);
-            this.someart.register(response.name,"http://graph.facebook.com/"+response.id+"/picture?type=large&width=720&height=720").then(data =>{
+            // console.log(fireregister);
+            this.register(response.name,"http://graph.facebook.com/"+response.id+"/picture?type=large&width=720&height=720").then(data =>{
               if(data){
-              console.log("registered");
+              console.log("registered:",response.id);
               this._ctx.invokeCallback(
                 fbid, // callback id, passed to the method
-                [true,response.id, this.someart]
+                [true,response.id ]
               );
             }
             })
@@ -297,10 +380,6 @@ fbAuthenticate(fbid){
         }
       );
 
-      // this._ctx.invokeCallback(
-      //   fbid, // callback id, passed to the method
-      //   [true]
-      // );
       console.log(response.authResponse);
      } 
      else {
@@ -309,12 +388,9 @@ fbAuthenticate(fbid){
         fbid, // callback id, passed to the method
         [false]
       );
-     
      }
    });
 }
-
-
 }
 
 

@@ -20,6 +20,8 @@ import Keyboard from './src/comp/keyboard';
 // const Peer = require('./peermin');
 // import Peer from 'peerjs';
 const peerAudioModule = NativeModules.peerAudioModule;
+import {getFriendsList} from './store';
+
 
 export default class CooperPlaza extends React.Component {
 
@@ -110,7 +112,7 @@ class FriendsPanel extends React.Component{
 class LeftPanel extends React.Component {
 
   render() {
-    console.log(this.props.page)
+    console.log("text:",this.props.friends)
     let page = <View></View>;
     if(this.props.page === "home"){
       page=(
@@ -118,6 +120,7 @@ class LeftPanel extends React.Component {
           <Left
             changePage = {changePage}
             friends={this.props.friends}
+            friendsactive = {this.props.friendsactive}
             searchtext={this.props.searchtext}
           />
         </View>

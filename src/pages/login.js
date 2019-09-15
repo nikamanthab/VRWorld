@@ -9,41 +9,44 @@ import {
     asset,
     NativeModules,
   } from 'react-360';
-  import {setUserId} from './../../store';
+  import {setUserId,handleAuth} from './../../store';
 
-  const fbAuth= NativeModules.fbAuth;
+  // const fbAuth= NativeModules.fbAuth;
 
 class LoginPage extends React.Component{
-  state={
-    checkStatus: null,
-  }
+  // state={
+  //   checkStatus: null,
+  //   uid: null
+  // }
    componentDidMount(){
-        console.log("in comp");
-        fbAuth.fbsetup( val => {
-          console.log("in comp",val)
-          this.setState({
-            checkStatus: val
-          });
-        });
+    //  console.log("fireballs:",firebase)
+        // fbAuth.fbsetup( (val,val2) => {
+        //   console.log("in comp",val)
+        //   this.setState({
+        //     checkStatus: val,
+        //     uid: val2
+        //   });
+        // });
    }
-   handleAuth(){
-     console.log("blah",this.state.checkStatus)
-     if(this.state.checkStatus){
-      setUserId(val2,val3); 
-      this.props.login();
-     }
-     else{
-      fbAuth.fbAuthenticate((val,val2,val3) => {
-        if(val){
-          setUserId(val2,val3);
-          this.props.login();
-        }
+  //  handleAuth(){
+  //    console.log("blah",this.state.checkStatus)
+  //    if(this.state.checkStatus){
+  //     setUserId(this.state.uid); 
+  //     this.props.login();
+  //    }
+  //    else{
+  //     fbAuth.fbAuthenticate((val,val2) => {
+  //       if(val){
+  //         console.log("boomboom:",val2);
+  //         setUserId(val2);
+  //         this.props.login();
+  //       }
 
-      });
-      // this.props.login();
-    }
+  //     });
+  //     // this.props.login();
+  //   }
     
-   }
+  //  }
 
     render = ()=>{
        
@@ -56,7 +59,7 @@ class LoginPage extends React.Component{
                 </View>
 
                 <View style={styles.greetingBox}>
-                    <VrButton style={{ flexDirection: 'row', justifyContent:'space-between'}} onClick={() => this.handleAuth()}>
+                    <VrButton style={{ flexDirection: 'row', justifyContent:'space-between'}} onClick={() => handleAuth()}>
                         <Image  style={{height: 40,width: 40, marginRight: 20}} source={asset('facebook.png')} />
                         <Text style={styles.greeting}>
                                Login
