@@ -14,7 +14,7 @@ function filter(arr,friends) {
      })
  };
 
-export const addFriend = (f) => {
+ const addFriend = (f) => {
     return new Promise((res, rej) => {
         db.collection("friends").add({
             uid: u,
@@ -26,7 +26,7 @@ export const addFriend = (f) => {
     })
 }
 
-export const rateMovie = async (arr) => {
+ const rateMovie = async (arr) => {
     var batch = db.batch();
     for (data of arr) {
         batch.set(db.collection("ratings").doc(), {
@@ -39,7 +39,7 @@ export const rateMovie = async (arr) => {
         return true;
 };
 
-export const register= (name,profilepic)=>{
+const register= (name,profilepic)=>{
     return new Promise((res,rej)=>{
         console.log("in there",u,name,profilepic,db);
          db.collection("users").doc(u).set({
@@ -52,7 +52,7 @@ export const register= (name,profilepic)=>{
 };
 
 
-export const createWatchParty=(arr,movieid,friends)=>{
+const createWatchParty=(arr,movieid,friends)=>{
    return new Promise((res,rej)=>{
       db.collection("watchparty").doc(u+movieid).set({movieid,invited:arr,initiator:u,friends}).then(()=>{
           res(true);
@@ -62,7 +62,7 @@ export const createWatchParty=(arr,movieid,friends)=>{
    });
 }
 
-export const listenWatchParty=(callback,friends)=>{
+  const listenWatchParty=(callback,friends)=>{
     db.collection("watchparty").where("invited", "array-contains",u).onSnapshot((snapshot)=>{
            snapshot.forEach((doc)=>{
                parties.push(doc.data());
@@ -76,7 +76,7 @@ export const listenWatchParty=(callback,friends)=>{
 }
 
 
-export const getPendingreq = (callback) => {
+ const getPendingreq = (callback) => {
     var promisearr = [];
 
     db.collection("friends").where("fuid", "==", u).where("status", "==", false).onSnapshot(function (qs) {
@@ -94,7 +94,7 @@ export const getPendingreq = (callback) => {
     });
 }
 
-export const  acceptFriendreq = (friend) => {
+const  acceptFriendreq = (friend) => {
     return new Promise((res, rej) => {
         db.collection("friends").where("fuid", "==", u).where("uid", "==", friend).get().then((docs) => {
             docs.forEach((docr) => {
@@ -112,7 +112,7 @@ export const  acceptFriendreq = (friend) => {
 
 
 
-export const getFriends = (callback) => {
+const getFriends = (callback) => {
     var switcher = false;
     db.collection("friends").where("uid", "==", u)
         .onSnapshot(function (querySnapshot) {
@@ -145,11 +145,14 @@ export const getFriends = (callback) => {
 
 
 
-export const controller = (config, uid) => {
+export default controller = (config, uid) => {
     firebase.initializeApp(config);
     db = firebase.firestore();
     u = uid;
     console.log("firebase domeel");
+    return {
+        getFriends,register,addFriend,acceptFriendreq
+    }
 }
 
 // http://graph.facebook.com/452651015464681/picture?type=large&width=720&height=720

@@ -7,11 +7,12 @@ import {
     asset,
     NativeModules
 } from 'react-360';
-import {getFriends} from './firebase-lib';
+// import {getFriends} from './firebase-lib';
 
 console.log("hmmm",friends);
 
 const State = {
+    someart:undefined,
     userid:undefined,
     // userid:452651015464681,
     searchtext:"",
@@ -44,9 +45,10 @@ setVideo = (movie)=>{
     State.people = ["mohan","jo","rya"];
 }
 
-export const setUserId = (val)=>{
+export const setUserId = (val,val2)=>{
     State.userid = val;
-    console.log("useridset:",val);
+    State.someart = val2;
+    console.log("useridset:",val, someart);
     updateComponents();
 }
 
@@ -69,7 +71,7 @@ export const changePage = (selectedpage,movie) => {
 }
 
 export const getFriendsList = ()=>{
-    getFriends(val => {
+    State.someart.getFriends(val => {
         console.log("Bangammmm:",val); //assumed
         State.friends = val
         updateComponents();

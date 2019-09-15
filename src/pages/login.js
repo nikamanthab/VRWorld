@@ -29,12 +29,13 @@ class LoginPage extends React.Component{
    handleAuth(){
      console.log("blah",this.state.checkStatus)
      if(this.state.checkStatus){
+      setUserId(val2,val3); 
       this.props.login();
      }
      else{
-      fbAuth.fbAuthenticate((val,val2) => {
+      fbAuth.fbAuthenticate((val,val2,val3) => {
         if(val){
-          setUserId(val2);
+          setUserId(val2,val3);
           this.props.login();
         }
 

@@ -5,7 +5,7 @@
 const url = "peerjs-server-api.herokuapp.com";
 import io from 'socket.io-client';
 import {validateCommand,getCommand} from './speech-recognition/p5speech/trie';
-import {controller,register as fireregister} from "./firebase-lib";
+import {controller} from "./firebase-lib";
 
 // import Peer from 'peerjs';
 // import React from 'react';
@@ -192,7 +192,8 @@ class fbAuth extends Module{
   constructor(ctx){
     super('fbAuth');
     this._ctx = ctx;
-    this.userid = 452651015464681;    
+    this.someart = undefined;
+    // this.userid = 452651015464681;    
     // this.userid = undefined;
     // console.log(ctx);
     this.firlibConfig = {
@@ -234,10 +235,11 @@ class fbAuth extends Module{
               // console.log("here",data);
               console.log("hi theeee",response);
               this.userid = response.id;
-              controller(this.firlibConfig,response.id)
+              this.someart=controller(this.firlibConfig,response.id)
+        
               this._ctx.invokeCallback(
                 id, // callback id, passed to the method
-                [true,response.id]
+                [true,response.id, this.someart]
               );
 
             }
@@ -275,16 +277,16 @@ fbAuthenticate(fbid){
         (response) => {
           if (response && !response.error) {
             console.log("hi theeee",response.name,response.id);// code here
-            userid = id;
-            controller(this.firlibConfig,response.id);
+            userid = response.id;
+            this.someart = controller(this.firlibConfig,response.id);
             console.log("after init");
             console.log(fireregister);
-            fireregister(response.name,"http://graph.facebook.com/"+response.id+"/picture?type=large&width=720&height=720").then(data =>{
+            this.someart.register(response.name,"http://graph.facebook.com/"+response.id+"/picture?type=large&width=720&height=720").then(data =>{
               if(data){
               console.log("registered");
               this._ctx.invokeCallback(
                 fbid, // callback id, passed to the method
-                [true,response.id]
+                [true,response.id, this.someart]
               );
             }
             })
