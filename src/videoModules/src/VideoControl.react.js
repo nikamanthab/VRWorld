@@ -296,6 +296,9 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
         this.props.player.seek(val);
         this.props.player.resume();
       }
+      else if(type == "seek"){
+        this.props.player.seek(val);
+      }
      this.socTrigger();
     })
   }
@@ -464,7 +467,7 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     if (this.props.player && this.state.duration) {
       console.log("clicked hhbdhbdhbhdb")
       this.props.player.seek(this.state.duration * progress);
-      peerAudioModule.socketControll({status: "ready",position: this.state.position});
+      peerAudioModule.socketControll({status: "ready",position: this.state.duration * progress});
     }
   };
 

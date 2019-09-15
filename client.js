@@ -330,7 +330,7 @@ class peerAudioModule extends Module {
           // vid.currentTime = obj.seektime;
           this._ctx.invokeCallback(
             id, // callback id, passed to the method
-            ["play",obj.currentTime]
+            ["seek",obj.currentTime]
           );
       }
   });
