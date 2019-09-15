@@ -117,7 +117,7 @@ class LeftPanel extends React.Component {
         <View>
           <Left
             changePage = {changePage}
-            movies={this.props.friends}
+            friends={this.props.friends}
             searchtext={this.props.searchtext}
           />
         </View>

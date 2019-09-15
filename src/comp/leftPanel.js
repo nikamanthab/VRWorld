@@ -13,31 +13,51 @@ import {
   import addfriend from './../../static_assets/addfriend.png';
   import search from './../../static_assets/search.png';
   import up from './../../static_assets/down.png';
+  import {searchPeople,upClick,downClick} from './../../store';
 
 
 class Left extends React.Component{
 
-    
-    
+    handleSearchClick = () => {
+        searchPeople(this.props.searchtext);
+    }
+
+    handleUpClick = () => {
+        upClick()
+    }
+
+    handleDownClick = () => {
+        downClick()
+    }
     
     render = ()=>{
         console.log("bhaammmmmmmmmmmmmmmmmmmmmmmmmmm:",this.props.friends);
         let list = <View></View>;
 
-        movies = this.props.movies;
+        if(this.props.friendsactive){
+            friends = this.props.friends;
+        }
+        else{
+            friends = this.props.people;
+        }
         console.log("booom:",this.props.searchtext)
-        list = movies.map((ele,i)=>{
+        list = friends.map((ele,i)=>{
             
-            let onlinelogo = (ele.online? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)
+            let onlinelogo = (ele[0].onlineStatus? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)
             console.log("onlinelogo:",onlinelogo);
-            let friendbtn = (<VrButton style={styles.card} onClick={()=>{}}>
-                    <Image style={styles.img1} source={addfriend}/>
-                </VrButton>)
-            if(ele.friend == true){
-                friendbtn = (<VrButton style={styles.accept}>
-                    <Text style={styles.greeting}>Accept</Text>
-                </VrButton>)
+            let friendbtn = (<View></View>)
+
+            if(this.props.friendsactive){
+                friendbtn = (<VrButton style={styles.card} onClick={()=>{}}>
+                        <Image style={styles.img1} source={addfriend}/>
+                    </VrButton>)
+                if(ele[0].status == true){
+                    friendbtn = (<VrButton style={styles.accept}>
+                        <Text style={styles.greeting}>Accept</Text>
+                    </VrButton>)
+                }
             }
+
 
 
             return(
@@ -54,7 +74,7 @@ class Left extends React.Component{
                             </View>
                             <View style={{marginLeft:10}}>
                                 <Text style={styles.greeting}>
-                                    {ele.name}
+                                    {ele[0].name}
                                 </Text>
                             </View>
                         </View>
@@ -70,13 +90,13 @@ class Left extends React.Component{
                 {list}
                 {/* CALL ALL THE FETCH INSTRUCTIONS IN STORE JS */}
                 <View style={styles.bottombar}>
-                    <VrButton>
+                    <VrButton onClick={()=>{this.handleUpClick()}}>
                         <Image source={up} style={{width:50,height:50,transform: [{ rotate: '180deg' }]}}/>
                     </VrButton>
-                    <VrButton onClick={()=>{console.log(this.props.searchtext)}}>
+                    <VrButton onClick={()=>{this.handleSearchClick()}}>
                         <Image source={search} style={{width:50,height:50}}/>
                     </VrButton>
-                    <VrButton>
+                    <VrButton onClick={()=>{this.handleDownClick()}}>
                         <Image source={up} style={{width:50,height:50}}/>
                     </VrButton>
                 </View>

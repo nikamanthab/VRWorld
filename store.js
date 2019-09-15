@@ -14,14 +14,17 @@ console.log("hmmm",friends);
 const State = {
     someart:undefined,
     userid:undefined,
+    friendlistpage: 1,
     // userid:452651015464681,
+    friendsactive:true,
     searchtext:"",
     page: "login",
-    friends: friends,
+    friends: [],
+    allfriends: [],
+    people: [],
     global: global,
     movies: movies,
     selectedMovie: "captainamerica",
-    people:[],
 }
 
 const listeners = new Set();
@@ -54,6 +57,10 @@ export const setUserId = (val,val2)=>{
 
 export const changeSearchText = (text)=>{
     State.searchtext = text;
+    if(text == ""){
+        State.friendsactive = true;
+        State.friendlistpage = 1;
+    }
     updateComponents();
 }
 
@@ -73,15 +80,57 @@ export const changePage = (selectedpage,movie) => {
 export const getFriendsList = ()=>{
     State.someart.getFriends(val => {
         console.log("Bangammmm:",val); //assumed
-        State.friends = val
-        updateComponents();
+        State.allfriends = val;
+        State.friends = val.slice(0,5);
+        updateComponents(); // test this as inside callback - assumed
     })
 } 
+
+export const searchPeople = (search) => {
+    State.someart.search(search,State.friendlistpage,val=>{
+        State.people = val; 
+        State.friendsactive = false;
+        updateComponents();
+    })
+}
+
+export const upClick = ()=>{
+    if(State.friendsactive){
+        State.friendlistpage = State.friendlistpage+1;
+        State.friends = State.allfriends.slice(State.friendlistpage*5-5,(State.friendlistpage+1)*5);
+        updateComponents();
+    }
+    else{
+        State.someart.search(search,State.friendlistpage+1,val=>{
+            State.people = val; 
+            State.friendsactive = false;
+            State.friendlistpage = State.friendlistpage + 1; 
+            updateComponents();
+        })
+    }
+}
+
+export const downClick = ()=>{
+    if(State.friendsactive){
+        State.friendlistpage = State.friendlistpage-1;
+        State.friends = State.allfriends.slice(State.friendlistpage*5-5,(State.friendlistpage+1)*5);
+        updateComponents();
+    }
+    else{
+        State.someart.search(search,State.friendlistpage-1,val=>{
+            State.people = val; 
+            State.friendsactive = false;
+            State.friendlistpage = State.friendlistpage - 1; 
+            updateComponents();
+        })
+    }
+}
 
 
 export const connect = (Component)=>{
     return class Wrapper extends React.Component{
         state = {
+            friendsactive: State.friendsactive,
             searchtext: State.searchtext,
             page: State.page,
             friends: State.friends,
@@ -94,6 +143,7 @@ export const connect = (Component)=>{
         _listener = ()=>{
             console.log("hmmm....")
             this.setState({
+                friendsactive: State.friendsactive,
                 searchtext: State.searchtext,
                 page: State.page,
                 friends: State.friends,
@@ -112,6 +162,7 @@ export const connect = (Component)=>{
             return(
                 <Component
                     {...this.props}
+                    friendsactive = {this.state.friendsactive}
                     searchtext = {this.state.searchtext}
                     page = {this.state.page}
                     global = {this.state.global}
