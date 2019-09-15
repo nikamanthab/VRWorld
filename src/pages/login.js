@@ -9,7 +9,7 @@ import {
     asset,
     NativeModules,
   } from 'react-360';
-  
+  import {setUserId} from './../../store';
 
   const fbAuth= NativeModules.fbAuth;
 
@@ -32,10 +32,12 @@ class LoginPage extends React.Component{
       this.props.login();
      }
      else{
-      fbAuth.fbAuthenticate((val) => {
+      fbAuth.fbAuthenticate((val,val2) => {
         if(val){
-         this.props.login();
+          setUserId(val2);
+          this.props.login();
         }
+
       });
       // this.props.login();
     }

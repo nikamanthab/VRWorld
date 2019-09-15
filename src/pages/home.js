@@ -8,9 +8,12 @@ import {
     Image,
     asset
   } from 'react-360';
-
+import {getFriendsList} from './../../store'
 class Home extends React.Component{
-
+  componentDidMount = ()=>{
+    //calling the main functions from store
+    getFriendsList();
+  }
   
   render = ()=>{
     let list = <View></View>

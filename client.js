@@ -192,6 +192,8 @@ class fbAuth extends Module{
   constructor(ctx){
     super('fbAuth');
     this._ctx = ctx;
+    this.userid = 452651015464681;    
+    // this.userid = undefined;
     // console.log(ctx);
     this.firlibConfig = {
       apiKey: "AIzaSyDxUdsBOiWl41ASEHweGZdhdCZtXDvPOg8",
@@ -203,6 +205,10 @@ class fbAuth extends Module{
       appId: "1:69732209271:web:72b6bf3a671d3b8f43ec72"
     };
 
+  }
+
+  getUserid(){
+    return this.userid;
   }
 
   fbsetup(id){
@@ -227,10 +233,11 @@ class fbAuth extends Module{
             if (response && !response.error) {
               // console.log("here",data);
               console.log("hi theeee",response);
+              this.userid = response.id;
               controller(this.firlibConfig,response.id)
               this._ctx.invokeCallback(
                 id, // callback id, passed to the method
-                [true]
+                [true,response.id]
               );
 
             }
@@ -268,7 +275,7 @@ fbAuthenticate(fbid){
         (response) => {
           if (response && !response.error) {
             console.log("hi theeee",response.name,response.id);// code here
-
+            userid = id;
             controller(this.firlibConfig,response.id);
             console.log("after init");
             console.log(fireregister);
@@ -277,7 +284,7 @@ fbAuthenticate(fbid){
               console.log("registered");
               this._ctx.invokeCallback(
                 fbid, // callback id, passed to the method
-                [true]
+                [true,response.id]
               );
             }
             })

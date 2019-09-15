@@ -118,11 +118,14 @@ export const getFriends = (callback) => {
         .onSnapshot(function (querySnapshot) {
             switcher = true;
             querySnapshot.docs.forEach(function (doc, i,arr) {
+                let requestStatus=doc.data().status;
                 db.collection("users").doc(doc.data().fuid).onSnapshot((docs) => {
                     friends = friends.filter(x => {
                         return x[1] != docs.id
                     }) || [];
-                    friends.push([docs.data(), docs.id]);
+                    let payload=doc.data();
+                    payload.status=requestStatus;
+                    friends.push([payload, docs.id]);
                     console.log(switcher);
                     console.log(querySnapshot.docs.length,i);
                     if (!switcher)

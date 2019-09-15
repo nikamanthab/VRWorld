@@ -25,7 +25,7 @@ export default class CooperPlaza extends React.Component {
 
   handleLogin = ()=>{
     // peerAudioModule.stream();
-    peerAudioModule.socketconnection();
+    // peerAudioModule.socketconnection();
     changePage("home");
   }
 

@@ -5,11 +5,15 @@ import {global} from './data/global';
 import {
     Environment,
     asset,
+    NativeModules
 } from 'react-360';
+import {getFriends} from './firebase-lib';
 
 console.log("hmmm",friends);
 
 const State = {
+    userid:undefined,
+    // userid:452651015464681,
     searchtext:"",
     page: "login",
     friends: friends,
@@ -40,6 +44,12 @@ setVideo = (movie)=>{
     State.people = ["mohan","jo","rya"];
 }
 
+export const setUserId = (val)=>{
+    State.userid = val;
+    console.log("useridset:",val);
+    updateComponents();
+}
+
 export const changeSearchText = (text)=>{
     State.searchtext = text;
     updateComponents();
@@ -57,6 +67,14 @@ export const changePage = (selectedpage,movie) => {
     // Environment.setBackgroundImage(asset(`./360_${house[`${roomName}`].img}`));
     updateComponents();
 }
+
+export const getFriendsList = ()=>{
+    getFriends(val => {
+        console.log("Bangammmm:",val); //assumed
+        State.friends = val
+        updateComponents();
+    })
+} 
 
 
 export const connect = (Component)=>{
