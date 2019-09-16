@@ -8,28 +8,88 @@ import {
     Image,
     asset
   } from 'react-360';
-import {getFriendsList} from './../../store'
+import {getFriendsList,getAllMovies} from './../../store'
+import search from './../../static_assets/search.png';
+
 class Home extends React.Component{
+
+  state={
+    visible:true,
+    movieselected:null,
+    movies: [],
+    search: "",
+    styles:{
+
+    }
+  }
+
+  componentWillMount = ()=>{
+    getAllMovies();
+  }
+
   componentDidMount = ()=>{
     //calling the main functions from store
-    getFriendsList();
+    // getFriendsList();
+    movies = this.props.movies;
+    this.setState({
+      movies:movies,
+      video: "video",
+      selected: null,
+    })
+
   }
+
+
+  handleSearch = ()=>{
+    console.log(this.props.searchtext);
+    this.setState({
+      search:this.props.searchtext
+    })
+  }
+
+handleselect(val,val1){
+  this.setState({
+    selected : val1,
+    visible: false,
+  });
+  
+  // this.props.changePage("video",ele.name)
+
+}
+
+handleredirect(){
+  this.props.changePage("video",this.state.selected);
+}
   
   render = ()=>{
+    let searchedmovies;
+    let nn = [];
+    for(ele of this.props.movies){
+      console.log("suppu:",ele);
+      if(ele["name"].indexOf(this.state.search)!=-1 || this.state.search==""){
+        nn.push(ele)
+        console.log("suppu3:",nn);
+    }
+  }
+  
+  console.log("suppu2",nn);
+  searchedmovies = nn;
+  searchedmovies = searchedmovies.slice(0,10);
+    console.log("fuckkkkkkk:",this.state.searchedmovies,this.props.movies)
     let list = <View></View>
-    movies = this.props.movies;
-        list = movies.map((ele,i)=>{
+        // movies = this.props.movies;
+        list = searchedmovies.map((ele,i)=>{
             return(
                 <View style={styles.greetingBox}>
-                    <VrButton onClick={()=>this.props.changePage("video",ele.name)} style={styles.card}>
-                        <View>
-                            <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
+                    <VrButton onClick={()=>this.handleselect("video",ele.name)} style={{justifyContent:'center',alignItems:'center'}}>
+                        <View style={{borderWidth:1,borderColor: 'green'}}>
+                            <Image style={styles.thumbnail} source={{uri:ele.photo}} />
                         </View>
-                        <View>
+                        {/* <View>
                             <Text style={styles.greeting}>
                                 {ele.name}
                             </Text>
-                        </View>
+                        </View> */}
                     </VrButton>
                 </View>
             )
@@ -45,22 +105,21 @@ class Home extends React.Component{
           <View style={styles.flexPanel} >
             {list}
           </View>
-          <View style={{width: 300, height:50, flexDirection:'row'}}>
-             <VrButton style={styles.buttons}>
-                <Text style={styles.greeting}>Up</Text>
-             </VrButton>
-             <VrButton style={styles.buttons}>
-               <Text style={styles.greeting}>Down</Text>
-             </VrButton>
-          <VrButton onClick={()=>{console.log(this.props.searchtext)}}>
-                    <Text>
-                        search
-                    </Text>
-                </VrButton>
+          <View style={{width: 500, height:50, flexDirection:'row',justifyContent:"space-between"}}>
+            <VrButton style={styles.buttons} disabled={this.state.visible} onClick={() => this.handleredirect()}>
+                <Text style={styles.greeting}>Create Party</Text>
+            </VrButton>
+            <VrButton onClick={()=>{this.handleSearch()}}>
+                <Image source={search} style={{width:50,height:50}}/>
+            </VrButton>
+            <VrButton style={styles.buttons}>
+               <Text style={styles.greeting}>Suggest Party</Text>
+            </VrButton>
           </View>
           </View>
         )
-    }
+    
+}
 }
 
 const styles = StyleSheet.create({
@@ -89,13 +148,14 @@ const styles = StyleSheet.create({
 
     },
     greetingBox: {
-      width: 310,
-      height: 100,
-      padding: 10,
-      margin:5,
-      backgroundColor: '#000000',
-      borderColor: '#639dda',
-      borderWidth: 2,
+      // width: 310,
+      // height: 100,
+      // padding: 10,
+      // margin:5,
+      // backgroundColor: '#000000',
+      // borderColor: '#639dda',
+      // borderColor: 'green',
+      // borderWidth: 5,
     },
     greeting: {
       fontSize: 30,
@@ -103,18 +163,18 @@ const styles = StyleSheet.create({
     },
     card:{
       // width:275,
-      flexDirection:"row"
+      // flexDirection:"row"
       // height: 50
     },
     thumbnail:{
-        width:100,
-        height:50
+      width: 150,
+      height: 200,
     },
     buttons:{
-     width: 120,
-     marginLeft: 10,
-     marginRight: 10,
-     backgroundColor: 'black'
+      height:50,
+      width:200,
+      backgroundColor:"#0690ba",
+      borderRadius:5
     },
   });
 

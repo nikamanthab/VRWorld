@@ -410,6 +410,23 @@ $acceptFriendreq(friend){
   })
 }
 
+getMovies(callbackid){
+    this.db.collection("movies").get().then((qs)=>{
+      let arr=[];
+      qs.forEach((doc)=>{
+        let payload={};
+        payload.id=doc.id;
+        console.log("booth3:",doc.data(),payload);
+          arr.push(Object.assign(doc.data(),payload));
+      });
+      console.log("boothu5",arr);
+      this._ctx.invokeCallback(
+        callbackid,
+        [arr]
+      )
+    }).catch((err)=>rej(err));
+}
+
 fbAuthenticate(fbid){
   // let id = 452651015464681
   // console.log(this.someart)

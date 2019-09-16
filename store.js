@@ -124,6 +124,13 @@ export const addFriend = (uid)=>{
     })
 }
 
+export const getAllMovies =  ()=>{
+  fbAuth.getMovies(value=>{
+    State.movies = value;
+    updateComponents()
+  })
+}
+
 export const searchPeople = () => {
     fbAuth.search(State.searchtext,State.friendlistpage,val=>{
         State.people = val; 
