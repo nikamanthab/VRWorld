@@ -81,25 +81,25 @@ export const changePage = (selectedpage,movie) => {
 
 friendsGen = ()=>{
     fbAuth.getFriends(val => {
-        console.log("Bangammmm:",val); //assumed
+        // console.log("Bangammmm:",val); //assumed
         State.allfriends = val;
         State.friends = val.slice(0,5);
-        console.log("trouser:",val.slice(0,5))
+        // console.log("trouser:",val.slice(0,5))
         updateComponents(); // test this as inside callback - assumed
+        // friendsGen()
     })
-    // friendsGen()
 }
 
 getFriendsList = ()=>{
     console.log("yoyo")
-    // friendsGen();
-    fbAuth.getFriends(val => {
-        console.log("Bangammmm:",val); //assumed
-        State.allfriends = val;
-        State.friends = val.slice(0,5);
-        console.log("trouser:",val.slice(0,5))
-        updateComponents(); // test this as inside callback - assumed
-    })
+    friendsGen();
+    // fbAuth.getFriends(val => {
+    //     console.log("Bangammmm:",val); //assumed
+    //     State.allfriends = val;
+    //     State.friends = val.slice(0,5);
+    //     console.log("trouser:",val.slice(0,5))
+    //     updateComponents(); // test this as inside callback - assumed
+    // })
 } 
 
 export const searchPeople = () => {

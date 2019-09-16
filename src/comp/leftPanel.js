@@ -52,14 +52,20 @@ class Left extends React.Component{
             console.log("onlinelogo:",onlinelogo);
             let friendbtn = (<View></View>)
 
-            if(this.props.friendsactive){
+            if(!this.props.friendsactive){
                 friendbtn = (<VrButton style={styles.card} onClick={()=>{}}>
                         <Image style={styles.img1} source={addfriend}/>
                     </VrButton>)
-                if(ele[0].status == true){
-                    friendbtn = (<VrButton style={styles.accept}>
+            }
+            else{
+                console.log("umbu:",ele[0].status)
+                if(ele[0].status == false){
+                    console.log("penis")
+                    friendbtn = (
+                    <VrButton style={styles.accept}>
                         <Text style={styles.greeting}>Accept</Text>
-                    </VrButton>)
+                    </VrButton>
+                    )
                 }
             }
 
@@ -75,7 +81,7 @@ class Left extends React.Component{
                                 {onlinelogo}
                             </View>
                             <View>
-                                <Image style={styles.thumbnail} source={asset(`profilepic/nitin.jpg`)} />
+                                <Image style={styles.thumbnail}  source={{uri: ele[0]["profilepic"]}} />
                             </View>
                             <View style={{marginLeft:10}}>
                                 <Text style={styles.greeting}>

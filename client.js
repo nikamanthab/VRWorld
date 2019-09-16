@@ -308,7 +308,7 @@ getFriends(callbackid){
                   friends = friends.filter(x => {
                       return x[1] != docs.id
                   }) || [];
-                  let payload=doc.data();
+                  let payload=docs.data();
                   payload.status=requestStatus;
                   friends.push([payload, docs.id]);
                   console.log(switcher);
