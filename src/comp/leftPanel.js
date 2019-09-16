@@ -47,8 +47,14 @@ class Left extends React.Component{
         }
         console.log("booom:",this.props.searchtext,friends)
         list = friends.map((ele,i)=>{
-            
-            let onlinelogo = (ele[0].onlineStatus? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)
+            console.log("onlinestaus:",ele[0].onlineStatus);
+            if(ele[0].onlineStatus){
+                onlinelogo = (<Image style={styles.img} source={greendot}/>)
+            }
+            else{
+                onlinelogo = (<Image style={styles.img} source={reddot}/>)
+            }
+            // let onlinelogo = (ele[0].onlineStatus? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)
             console.log("onlinelogo:",onlinelogo);
             let friendbtn = (<View></View>)
 

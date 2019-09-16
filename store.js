@@ -80,13 +80,14 @@ export const changePage = (selectedpage,movie) => {
 }
 
 friendsGen = ()=>{
+    // console.log("yoyo2")
     fbAuth.getFriends(val => {
         // console.log("Bangammmm:",val); //assumed
         State.allfriends = val;
         State.friends = val.slice(0,5);
         // console.log("trouser:",val.slice(0,5))
+        friendsGen();
         updateComponents(); // test this as inside callback - assumed
-        // friendsGen()
     })
 }
 

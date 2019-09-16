@@ -298,10 +298,20 @@ filter(arr,friends) {
 };
 
 getFriends(callbackid){
+  console.log("umbru2");
   var switcher = false;
   this.db.collection("friends").where("uid", "==", this.u)
       .onSnapshot( (querySnapshot) => {
           switcher = true;
+          console.log("achaaa:");
+          if(querySnapshot.docs.length==0){
+            console.log("query0");
+            this._ctx.invokeCallback(
+              callbackid,
+              [[]]
+            );
+            return ;
+          }
           querySnapshot.docs.forEach( (doc, i,arr) => {
               let requestStatus=doc.data().status;
               this.db.collection("users").doc(doc.data().fuid).onSnapshot((docs) => {
@@ -311,7 +321,7 @@ getFriends(callbackid){
                   let payload=docs.data();
                   payload.status=requestStatus;
                   friends.push([payload, docs.id]);
-                  console.log(switcher);
+                  console.log("switcher:",switcher);
                   console.log(querySnapshot.docs.length,i);
                   if (!switcher){
                     this._ctx.invokeCallback(
