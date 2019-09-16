@@ -116,6 +116,20 @@ const getFriends = (callback) => {
     var switcher = false;
     db.collection("friends").where("uid", "==", u)
         .onSnapshot(function (querySnapshot) {
+            querySnapshot.docChanges().forEach(function(change) {
+                if (change.type === "added") {
+                }
+                if (change.type === "modified") {
+                }
+                if (change.type === "removed") {
+                }
+            });
+
+
+
+
+
+
             switcher = true;
             querySnapshot.docs.forEach(function (doc, i,arr) {
                 let requestStatus=doc.data().status;

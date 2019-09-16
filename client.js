@@ -297,22 +297,42 @@ filter(arr,friends) {
    })
 };
 
-getFriends(callbackid){
+$addFriend(f) {
+  return new Promise((res, rej) => {
+      this.db.collection("friends").doc().set({
+          uid: this.u,
+          fuid: f,
+          status: false
+      }).then(() => {
+          res("Friend added successfully");
+      }).catch((err) => rej(err));
+  })
+}
+
+getFriends(flag,callbackid){
   console.log("umbru2");
   var switcher = false;
+  let counter = 0;
   this.db.collection("friends").where("uid", "==", this.u)
       .onSnapshot( (querySnapshot) => {
           switcher = true;
           console.log("achaaa:");
           if(querySnapshot.docs.length==0){
             console.log("query0");
-            this._ctx.invokeCallback(
-              callbackid,
-              [[]]
-            );
-            return ;
+            console.log("counter:",counter);
+            if(counter == 1 || flag){
+              this._ctx.invokeCallback(
+                callbackid,
+                [[]]
+              );
+              return ;
+            }
+            else{
+              counter++;
+            }
           }
-          querySnapshot.docs.forEach( (doc, i,arr) => {
+          if(counter == 1 || flag){
+            querySnapshot.docs.forEach( (doc, i,arr) => {
               let requestStatus=doc.data().status;
               this.db.collection("users").doc(doc.data().fuid).onSnapshot((docs) => {
                   friends = friends.filter(x => {
@@ -323,35 +343,47 @@ getFriends(callbackid){
                   friends.push([payload, docs.id]);
                   console.log("switcher:",switcher);
                   console.log(querySnapshot.docs.length,i);
+                  console.log("hittt",!switcher);
+                  console.log(!switcher);
                   if (!switcher){
-                    this._ctx.invokeCallback(
-                      callbackid,
-                      [friends]
-                    )
+                    console.log("gumahuma1")
+                      this._ctx.invokeCallback(
+                        callbackid,
+                        [friends]
+                      )
+                      console.log("called gummahuma1")
                   }
                       // callback(friends);
                   if (switcher) {
                       if (arr.length == i+1) {
+                        console.log("guma2");
                           this._ctx.invokeCallback(
                             callbackid,
                             [friends]
                           );
                           // callback(friends);
                           switcher = false;
+                          console.log("called gummahuma2")
+
                       }
                   }
               });
 
           });
+          }
+          else{counter++;}
+          
       });
 }
 
 
-search=(frname,page,callbackid)=>{
+search(frname,page,callbackid){
   this.db.collection("users").where("name","==",frname).limit(5*page).get().then((snap)=>{
       var myarr=[];
       snap.forEach((doc)=>{
-          myarr.push(doc.data());
+        let payload=doc.data();
+        payload.uid=doc.id;
+          myarr.push(payload);
       });
       myarr.slice(page*5-4,page*5+1);
       this._ctx.invokeCallback(
@@ -360,6 +392,22 @@ search=(frname,page,callbackid)=>{
       )
       // callback(myarr);  
   });
+}
+
+$acceptFriendreq(friend){
+  return new Promise((res, rej) => {
+      this.db.collection("friends").where("uid", "==", this.u).where("fuid", "==",friend).get().then((docs) => {
+          docs.forEach((docr) => {
+              this.db.collection("friends").doc(docr.id).update({
+                  status: true
+              }).then(() => {
+                  res(true);
+              }).catch((err) => {
+                  rej(err);
+              })
+          })
+      })
+  })
 }
 
 fbAuthenticate(fbid){

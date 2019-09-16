@@ -14,8 +14,10 @@ import {
   import search from './../../static_assets/search.png';
   import up from './../../static_assets/down.png';
   import {searchPeople,upClick,downClick} from './../../store';
+
 //   import {getFriendsList} from './../../store';
 // import {} from './../../store'
+import {addFriend,acceptHandler} from './../../store';
 
 class Left extends React.Component{
     componentDidMount = ()=>{
@@ -34,73 +36,132 @@ class Left extends React.Component{
     handleDownClick = () => {
         downClick()
     }
+
+    handleAccept = (id)=>{
+        console.log("idid:",id)
+        acceptHandler(id)
+    }
+    handleAddFriend = (uid)=>{
+        console.log("thongidu:",uid);
+        addFriend(uid);
+    }
     
     render = ()=>{
         console.log("bhaammmmmmmmmmmmmmmmmmmmmmmmmmm:",this.props.friendsactive,this.props.people,this.props.friends);
         let list = <View></View>;
+        
 
         if(this.props.friendsactive){
             friends = this.props.friends;
-        }
-        else{
-            friends = this.props.people;
-        }
-        console.log("booom:",this.props.searchtext,friends)
-        list = friends.map((ele,i)=>{
-            console.log("onlinestaus:",ele[0].onlineStatus);
-            if(ele[0].onlineStatus){
-                onlinelogo = (<Image style={styles.img} source={greendot}/>)
-            }
-            else{
-                onlinelogo = (<Image style={styles.img} source={reddot}/>)
-            }
-            // let onlinelogo = (ele[0].onlineStatus? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)
-            console.log("onlinelogo:",onlinelogo);
-            let friendbtn = (<View></View>)
-
-            if(!this.props.friendsactive){
-                friendbtn = (<VrButton style={styles.card} onClick={()=>{}}>
-                        <Image style={styles.img1} source={addfriend}/>
-                    </VrButton>)
-            }
-            else{
-                console.log("umbu:",ele[0].status)
+            console.log("booom:",this.props.searchtext,friends)
+            list = friends.map((ele,i)=>{
+                console.log("onlinestaus:",ele[0].onlineStatus);
+                let onlinelogo = (ele[0].onlineStatus? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)
+                console.log("onlinelogo:",onlinelogo);
+                let friendbtn = (<View></View>);
                 if(ele[0].status == false){
-                    console.log("penis")
                     friendbtn = (
-                    <VrButton style={styles.accept}>
+                    <VrButton style={styles.accept} onClick={()=>{this.handleAccept(ele[1])}}>
                         <Text style={styles.greeting}>Accept</Text>
                     </VrButton>
                     )
                 }
-            }
+                return(
+                    <View key={i} style={styles.greetingBox}>
+                            {/* <View>
+                                <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
+                            </View> */}
+                            <View style={{flexDirection:"row"}}>
+                                <View>
+                                    {onlinelogo}
+                                </View>
+                                <View>
+                                    <Image style={styles.thumbnail}  source={{uri: ele[0]["profilepic"]}} />
+                                </View>
+                                <View style={{marginLeft:10}}>
+                                    <Text style={styles.greeting}>
+                                        {ele[0].name}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={styles.friendadddiv}>
+                                {friendbtn}
+                            </View>
+                    </View>
+                )
+            });
+        }
+        else{
+            peoples = this.props.people;
+            list = peoples.map((ele,i)=>{
+                console.log("onlinestaus:",ele.onlineStatus);
+                let onlinelogo = (ele.onlineStatus? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)
+                console.log("onlinelogo:",onlinelogo);
+                let friendbtn = (<View></View>);
+                friendbtn = (<VrButton style={styles.card} onClick={()=>{this.handleAddFriend(ele["uid"])}}>
+                        <Image style={styles.img1} source={addfriend}/>
+                    </VrButton>)
+                return(
+                    <View key={i} style={styles.greetingBox}>
+                            {/* <View>
+                                <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
+                            </View> */}
+                            <View style={{flexDirection:"row"}}>
+                                <View>
+                                    {onlinelogo}
+                                </View>
+                                <View>
+                                    <Image style={styles.thumbnail}  source={{uri: ele["profilepic"]}} />
+                                </View>
+                                <View style={{marginLeft:10}}>
+                                    <Text style={styles.greeting}>
+                                        {ele.name}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={styles.friendadddiv}>
+                                {friendbtn}
+                            </View>
+                    </View>
+                )
+            })
+        }
+        
+
+            // if(!this.props.friendsactive){
+                
+            // }
+            // else{
+            //     console.log("umbu:",ele[0].status)
+                
+            // }
 
 
 
-            return(
-                <View key={i} style={styles.greetingBox}>
-                        {/* <View>
-                            <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
-                        </View> */}
-                        <View style={{flexDirection:"row"}}>
-                            <View>
-                                {onlinelogo}
-                            </View>
-                            <View>
-                                <Image style={styles.thumbnail}  source={{uri: ele[0]["profilepic"]}} />
-                            </View>
-                            <View style={{marginLeft:10}}>
-                                <Text style={styles.greeting}>
-                                    {ele[0].name}
-                                </Text>
-                            </View>
-                        </View>
-                        <View style={styles.friendadddiv}>
-                            {friendbtn}
-                        </View>
-                </View>
-            )
-        })
+        //     return(
+        //         <View key={i} style={styles.greetingBox}>
+        //                 {/* <View>
+        //                     <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
+        //                 </View> */}
+        //                 <View style={{flexDirection:"row"}}>
+        //                     <View>
+        //                         {onlinelogo}
+        //                     </View>
+        //                     <View>
+        //                         <Image style={styles.thumbnail}  source={{uri: ele[0]["profilepic"]}} />
+        //                     </View>
+        //                     <View style={{marginLeft:10}}>
+        //                         <Text style={styles.greeting}>
+        //                             {ele[0].name}
+        //                         </Text>
+        //                     </View>
+        //                 </View>
+        //                 <View style={styles.friendadddiv}>
+        //                     {friendbtn}
+        //                 </View>
+        //         </View>
+        //     )
+        // })
 
         return(
             <View style={[styles.panel]}>   

@@ -79,21 +79,21 @@ export const changePage = (selectedpage,movie) => {
     updateComponents();
 }
 
-friendsGen = ()=>{
-    // console.log("yoyo2")
-    fbAuth.getFriends(val => {
-        // console.log("Bangammmm:",val); //assumed
+friendsGen = (bobo)=>{
+    console.log("yoyo2")
+    fbAuth.getFriends(bobo,val => {
+        console.log("Bangammmm:",val); //assumed
         State.allfriends = val;
         State.friends = val.slice(0,5);
-        // console.log("trouser:",val.slice(0,5))
-        friendsGen();
+        console.log("trouser:",val.slice(0,5))
         updateComponents(); // test this as inside callback - assumed
+        friendsGen(false);
     })
 }
 
 getFriendsList = ()=>{
     console.log("yoyo")
-    friendsGen();
+    friendsGen(true);
     // fbAuth.getFriends(val => {
     //     console.log("Bangammmm:",val); //assumed
     //     State.allfriends = val;
@@ -102,6 +102,27 @@ getFriendsList = ()=>{
     //     updateComponents(); // test this as inside callback - assumed
     // })
 } 
+
+export const acceptHandler = (id)=>{
+    console.log("sucker")
+    fbAuth.acceptFriendreq(id).then((data)=>{
+        console.log("accepted:",id);
+        // State.friends.forEach(ele=>{
+        //     if(ele[1] == id){
+        //         ele[0]["status"] = true;
+        //     }
+        // },()=>{
+        //     updateComponents();
+        // })
+    }).catch(console.log);
+}
+
+export const addFriend = (uid)=>{
+    console.log("uid:",uid);
+    fbAuth.addFriend(uid).then(()=>{
+        console.log("sent:",uid);
+    })
+}
 
 export const searchPeople = () => {
     fbAuth.search(State.searchtext,State.friendlistpage,val=>{
