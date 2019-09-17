@@ -244,7 +244,7 @@ class fbAuth extends Module{
               // console.log("here",data);
               console.log("hi theeee",response);
               this.userid = response.id;
-              // this.name = response.name;
+              this.username = response.name;
               this.controller(this.firlibConfig,response.id)
         
               this._ctx.invokeCallback(
@@ -488,7 +488,7 @@ fbAuthenticate(fbid){
           if (response && !response.error) {
             console.log("hi theeee",response.name,response.id);// code here
             userid = response.id;
-            this.name= response.name;
+            this.username= response.name;
             this.controller(this.firlibConfig,response.id);
             console.log("after init");
             // console.log(fireregister);

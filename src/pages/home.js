@@ -77,7 +77,7 @@ handleredirect(){
   
   console.log("myfriends:",myarr)
 
-  watchParty(myarr,this.state.id,true,this.selected);
+  watchParty(myarr,this.state.id,true,this.state.selected);
   // this.props.changePage("video",this.state.selected);
 }
   
