@@ -8,8 +8,17 @@ import {
     Image,
     asset
   } from 'react-360';
+  import {listenParty} from './../../store';
 
 class Right extends React.Component{
+
+    componentWillMount = ()=>{
+        if(this.props.type === "friends")
+            listenParty(true)
+        // else
+            // listenParty(false)      
+    }
+
     render = ()=>{
         movies = this.props.movies;
         list = movies.map((ele,i)=>{

@@ -194,6 +194,7 @@ var parties=[];
 class fbAuth extends Module{
 
   constructor(ctx){
+    console.log("bhaambhaam")
     super('fbAuth');
     this._ctx = ctx;
     this.db = undefined;
@@ -201,6 +202,7 @@ class fbAuth extends Module{
     // this.someart = undefined;
     // this.userid = 452651015464681;    
     // this.userid = undefined;
+    this.username = "";
     // console.log(ctx);
     this.firlibConfig = {
       apiKey: "AIzaSyDxUdsBOiWl41ASEHweGZdhdCZtXDvPOg8",
@@ -217,6 +219,7 @@ class fbAuth extends Module{
   getUserid(){
     return this.userid;
   }
+
 
   fbsetup(id){
 
@@ -241,6 +244,7 @@ class fbAuth extends Module{
               // console.log("here",data);
               console.log("hi theeee",response);
               this.userid = response.id;
+              // this.name = response.name;
               this.controller(this.firlibConfig,response.id)
         
               this._ctx.invokeCallback(
@@ -282,7 +286,7 @@ register= (name,profilepic)=>{
   return new Promise((res,rej)=>{
       console.log("in there",this.u,name,profilepic,this.db);
        this.db.collection("users").doc(this.u).set({
-          name,profilepic
+          name,profilepic,onlineStatus:true
       }).then(()=>{
           res(true);
       });
@@ -313,7 +317,7 @@ getFriends(flag,callbackid){
   console.log("umbru2");
   var switcher = false;
   let counter = 0;
-  this.db.collection("friends").where("uid", "==", this.u)
+  this.db.collection("friends").where("fuid", "==", this.u)
       .onSnapshot( (querySnapshot) => {
           switcher = true;
           console.log("achaaa:");
@@ -334,7 +338,7 @@ getFriends(flag,callbackid){
           if(counter == 1 || flag){
             querySnapshot.docs.forEach( (doc, i,arr) => {
               let requestStatus=doc.data().status;
-              this.db.collection("users").doc(doc.data().fuid).onSnapshot((docs) => {
+              this.db.collection("users").doc(doc.data().uid).onSnapshot((docs) => {
                   friends = friends.filter(x => {
                       return x[1] != docs.id
                   }) || [];
@@ -396,12 +400,15 @@ search(frname,page,callbackid){
 
 $acceptFriendreq(friend){
   return new Promise((res, rej) => {
-      this.db.collection("friends").where("uid", "==", this.u).where("fuid", "==",friend).get().then((docs) => {
+    console.log("accepthit");
+      this.db.collection("friends").where("fuid", "==", this.u).where("uid", "==",friend).get().then((docs) => {
           docs.forEach((docr) => {
               this.db.collection("friends").doc(docr.id).update({
                   status: true
               }).then(() => {
-                  res(true);
+                this.db.collection("friends").doc().set({uid:this.u,status:true,fuid:friend});
+                console.log("al6767");
+                res(true);
               }).catch((err) => {
                   rej(err);
               })
@@ -426,6 +433,48 @@ getMovies(callbackid){
       )
     }).catch((err)=>rej(err));
 }
+createWatchParty(arr,movieid,friends,moviename){
+  console.log("inwatch!!");
+     this.db.collection("watchparty").doc(this.u+movieid).set({movieid,invited:arr,initiator:this.u,friends,name:this.username,moviename}).then(()=>{
+       console.log("addedwatch");  
+     })
+
+}
+
+filter(arr,friends) {
+  return arr.filter((x) => {
+   if(x.friends===friends){
+       return true;
+   }
+   })
+};
+
+listenWatchParty(bobo,friends,callbackid){
+  let counter = 0;
+  this.db.collection("watchparty").where("invited", "array-contains",this.u).onSnapshot((snapshot)=>{
+    console.log("lenght",snapshot.docs.length);
+         snapshot.forEach((doc)=>{
+             parties.push(doc.data());
+         });
+         console.log("parties",parties)
+         if(counter == 1 || bobo){
+          if(friends){
+            this._ctx.invokeCallback(
+              callbackid,
+              [this.filter(parties,true)]
+            )
+           // callback(filter(parties,true));
+          }else{
+           this._ctx.invokeCallback(
+             callbackid,
+             [this.filter(parties,false)]
+           )
+           //  callback(filter(parties,false));
+          }
+         }
+         else{counter++;}
+  })
+}
 
 fbAuthenticate(fbid){
   // let id = 452651015464681
@@ -439,6 +488,7 @@ fbAuthenticate(fbid){
           if (response && !response.error) {
             console.log("hi theeee",response.name,response.id);// code here
             userid = response.id;
+            this.name= response.name;
             this.controller(this.firlibConfig,response.id);
             console.log("after init");
             // console.log(fireregister);

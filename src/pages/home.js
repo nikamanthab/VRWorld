@@ -8,7 +8,7 @@ import {
     Image,
     asset
   } from 'react-360';
-import {getFriendsList,getAllMovies} from './../../store'
+import {getFriendsList,getAllMovies,watchParty} from './../../store'
 import search from './../../static_assets/search.png';
 
 class Home extends React.Component{
@@ -19,7 +19,11 @@ class Home extends React.Component{
     movies: [],
     search: "",
     styles:{
-
+      height:220,
+      width:170,
+      padding:3,
+      borderWidth:3,
+      borderColor:"red"
     }
   }
 
@@ -35,6 +39,8 @@ class Home extends React.Component{
       movies:movies,
       video: "video",
       selected: null,
+      id: null,
+      first: true
     })
 
   }
@@ -47,10 +53,13 @@ class Home extends React.Component{
     })
   }
 
-handleselect(val,val1){
+handleselect(val,val1,val2){
+  console.log("betta",val1,val2);
   this.setState({
     selected : val1,
     visible: false,
+    first:false,
+    id:val2,
   });
   
   // this.props.changePage("video",ele.name)
@@ -58,7 +67,18 @@ handleselect(val,val1){
 }
 
 handleredirect(){
-  this.props.changePage("video",this.state.selected);
+  console.log("friends:",this.props.friends,this.state.id,this.state.selected);
+  let myfriends=this.props.friends.filter(data =>{
+    return data[0]["status"]==true
+  });
+  let myarr= myfriends.map(ele =>{
+    return ele[1];
+  });
+  
+  console.log("myfriends:",myarr)
+
+  watchParty(myarr,this.state.id,true,this.selected);
+  // this.props.changePage("video",this.state.selected);
 }
   
   render = ()=>{
@@ -75,15 +95,15 @@ handleredirect(){
   console.log("suppu2",nn);
   searchedmovies = nn;
   searchedmovies = searchedmovies.slice(0,10);
-    console.log("fuckkkkkkk:",this.state.searchedmovies,this.props.movies)
+    console.log("fuckkkkkkk:",searchedmovies,this.props.movies)
     let list = <View></View>
         // movies = this.props.movies;
         list = searchedmovies.map((ele,i)=>{
             return(
                 <View style={styles.greetingBox}>
-                    <VrButton onClick={()=>this.handleselect("video",ele.name)} style={{justifyContent:'center',alignItems:'center'}}>
+                    <VrButton onClick={()=>this.handleselect("video",ele.name,ele.id)} style={{justifyContent:'center',alignItems:'center'}}>
                         <View style={{borderWidth:1,borderColor: 'green'}}>
-                            <Image style={styles.thumbnail} source={{uri:ele.photo}} />
+                            <Image style={(this.state.selected != ele.name && this.state.first == false)?styles.thumbnail2:styles.thumbnail} source={{uri:ele.photo}} />
                         </View>
                         {/* <View>
                             <Text style={styles.greeting}>
@@ -148,8 +168,10 @@ const styles = StyleSheet.create({
 
     },
     greetingBox: {
+      width: 150,
+      height: 200,
       // width: 310,
-      // height: 100,
+      // height: 100, 
       // padding: 10,
       // margin:5,
       // backgroundColor: '#000000',
@@ -169,6 +191,11 @@ const styles = StyleSheet.create({
     thumbnail:{
       width: 150,
       height: 200,
+    },
+    thumbnail2:{
+      width:150,
+      height:200,
+      opacity: 0.5
     },
     buttons:{
       height:50,

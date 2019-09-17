@@ -46,6 +46,7 @@ export default class CooperPlaza extends React.Component {
           changePage = {changePage}
           movies = {this.props.movies}
           searchtext={this.props.searchtext}
+          friends ={this.props.friends}
         />
       )
     }
@@ -66,6 +67,9 @@ class RightPanel extends React.Component {
         <View>
           <Right
             title={"global"}
+            friends={this.props.friends}
+            type={"global"}
+            globalfriends = {this.props.globalfriends}
             searchtext={this.props.searchtext}
             changePage = {changePage}
             movies={this.props.global}
@@ -94,7 +98,9 @@ class FriendsPanel extends React.Component{
         <View>
           <Right
             title={"friends"}
+            type={"friends"}
             searchtext={this.props.searchtext}
+            globalfriends = {this.props.globalfriends}
             changePage = {changePage}
             movies={this.props.global}
           />
