@@ -15,7 +15,7 @@ class Right extends React.Component{
     componentWillMount = ()=>{
         if(this.props.type == "friends")
             listenParty(true)
-        else if(this.props.type == "global")
+        else if(this.props.type == "global") 
             listenParty(false)      
     }
 
@@ -115,6 +115,19 @@ const styles = StyleSheet.create({
     thumbnail:{
         width:60,
         height:80
+    },
+    btn:{
+        width:150,
+        backgroundColor:'#0690ba',
+        borderRadius:5,
+        marginTop:5
+    },
+    btn1:{
+        width:150,
+        backgroundColor:'#0690ba',
+        borderRadius:5,
+        marginTop:5,
+        opacity:0.5,
     }
   });
 

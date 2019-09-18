@@ -28,7 +28,7 @@ const State = {
     movies: movies,
     selectedMovie: "captainamerica",
     globalfriends:[],
-    myfirends:[],
+    myfriends:[],
 }
 
 const listeners = new Set();
@@ -190,11 +190,13 @@ listenRecursive = (bobo,friends) => {
                 lol.push(y); 
             } 
         });
-        if(friends)
-            State.myfriends= lol
-        else
-           State.globalfriends = lol
-        console.log("listening party new updated arr:",lol,friends);
+        if(friends){
+            State.myfriends= lol;
+        } 
+        else{
+            State.globalfriends = lol;
+        }
+        console.log("listening party new updated arr:",lol,friends,State.globalfriends,State.myfriends);
         updateComponents();
         listenRecursive(false,friends)
     })
