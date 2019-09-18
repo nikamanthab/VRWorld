@@ -8,7 +8,7 @@ import {
     Image,
     asset
   } from 'react-360';
-import {getFriendsList,getAllMovies,watchParty} from './../../store'
+import {getFriendsList,getAllMovies,watchParty,emitJoin} from './../../store'
 import AnimatedBtn from './../comp/animatedBtn';
 import search from './../../static_assets/search.png';
 
@@ -81,6 +81,7 @@ handleredirect(){
   console.log("myfriends:",myarr)
 
   watchParty(myarr,this.state.id,true,this.state.selected,this.state.photo);
+  emitJoin(this.state.id,"");
   this.props.changePage("video",this.state.selected);
 }
   

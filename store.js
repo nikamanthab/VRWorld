@@ -240,6 +240,15 @@ export const handleAuth = ()=>{
       });
 }
 
+export const emitJoin = (movieid,userid) =>{
+    if(userid == "")
+     let word = State.userid + "-" + movieid;
+    else
+     let word = userid + "-" + movieid; 
+    console.log("word",word);
+    peerAudioModule.socketemit("joinRoom", word);
+}
+
 
 export const connect = (Component)=>{
     return class Wrapper extends React.Component{
