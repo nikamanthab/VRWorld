@@ -8,7 +8,9 @@ import {
     NativeModules,
 } from 'react-360';
 // import {getFriends} from './firebase-lib';
-const fbAuth= NativeModules.fbAuth;
+const fbAuth = NativeModules.fbAuth;
+const peerAudioModule = NativeModules.peerAudioModule;
+
 
 
 console.log("hmmm",friends);
@@ -210,7 +212,7 @@ export const listenParty = (friends)=>{
 export const handleAuth = ()=>{
     console.log("ole:",fbAuth)
     fbAuth.fbsetup( (val,val2) => {
-        console.log("in comp",val)
+        console.log("in comp",val,val2)
         // this.setState({
         //   checkStatus: val,
         //   uid: val2
@@ -219,14 +221,18 @@ export const handleAuth = ()=>{
         if(val) {
             setUserId(val2);
             changePage("home");
+            console.log("in comp222:",val2);
+            peerAudioModule.socketconnection(val2);
         }
         else{
             // console.log("blah",this.state.checkStatus)
             fbAuth.fbAuthenticate((val,val2) => {
                 if(val){
-                console.log("boomboom:",val2);
-                setUserId(val2);
-                changePage("home")
+                    console.log("boomboom:",val2);
+                    setUserId(val2);
+                    changePage("home")
+                    console.log("in comp222:",val2);
+                    peerAudioModule.socketconnection(val2);
                 }
             });
             // this.props.login();

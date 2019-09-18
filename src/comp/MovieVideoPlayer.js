@@ -21,7 +21,7 @@ class Left extends React.Component{
     componentWillMount = ()=>{
       // console.log(validateCommand);
       // speechRecognition.main();
-      peerAudioModule.socketconnection();
+      // peerAudioModule.socketconnection();
     }
 
     render = ()=>{

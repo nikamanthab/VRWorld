@@ -9,6 +9,7 @@ import {
     asset
   } from 'react-360';
 import {getFriendsList,getAllMovies,watchParty} from './../../store'
+import AnimatedBtn from './../comp/animatedBtn';
 import search from './../../static_assets/search.png';
 
 class Home extends React.Component{
@@ -29,6 +30,7 @@ class Home extends React.Component{
 
   componentWillMount = ()=>{
     getAllMovies();
+    
   }
 
   componentDidMount = ()=>{
@@ -79,7 +81,7 @@ handleredirect(){
   console.log("myfriends:",myarr)
 
   watchParty(myarr,this.state.id,true,this.state.selected,this.state.photo);
-  // this.props.changePage("video",this.state.selected);
+  this.props.changePage("video",this.state.selected);
 }
   
   render = ()=>{
@@ -127,15 +129,18 @@ handleredirect(){
             {list}
           </View>
           <View style={{width: 500, height:50, flexDirection:'row',justifyContent:"space-between"}}>
-            <VrButton style={styles.buttons} disabled={this.state.visible} onClick={() => this.handleredirect()}>
+            {/* <AnimatedBtn text={"nitin"}/> */}
+            <AnimatedBtn onClick={() => this.handleredirect()} text={"Create Party"}/>
+            {/* <VrButton style={styles.buttons} disabled={this.state.visible} onClick={() => this.handleredirect()}>
                 <Text style={styles.greeting}>Create Party</Text>
-            </VrButton>
+            </VrButton> */}
             <VrButton onClick={()=>{this.handleSearch()}}>
                 <Image source={search} style={{width:50,height:50}}/>
             </VrButton>
-            <VrButton style={styles.buttons}>
+            <AnimatedBtn onClick={alert("enter")} text={"Suggest Party"} />
+            {/* <VrButton style={styles.buttons}>
                <Text style={styles.greeting}>Suggest Party</Text>
-            </VrButton>
+            </VrButton> */}
           </View>
           </View>
         )

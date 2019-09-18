@@ -126,7 +126,7 @@ function init(bundle, parent, options = {}) {
   r360.compositor.setBackground(r360.getAssetURL('tv-room.jpg'));
 }
 
-var socket;
+// var socket;
 var mypeers = [];
 var room = "room";
 var gate = true;
@@ -524,6 +524,7 @@ class peerAudioModule extends Module {
   constructor(ctx) {
     super('peerAudioModule')
     this._ctx = ctx;
+    this.socket = {};
     // console.log(ctx);
   }
 
@@ -540,25 +541,25 @@ class peerAudioModule extends Module {
 
   socketControll(event){
     if(event.status == "ready"){
-      socket.emit("controls", {
+      this.socket.emit("controls", {
         action: "seek",
-        id: socket.id,
+        id: this.socket.id,
         room,
         currentTime: event.position
     });
     }
     else if(event.status == "paused"){
-      socket.emit("controls", {
+      this.socket.emit("controls", {
         action: "pause",
-        id: socket.id,
+        id: this.socket.id,
         room,
         currentTime: event.position
     });
     }
     else if(event.status == "playing"){
-      socket.emit("controls", {
+      this.socket.emit("controls", {
         action: "play",
-        id: socket.id,
+        id: this.socket.id,
         room,
         currentTime: event.position
     });
@@ -567,12 +568,12 @@ class peerAudioModule extends Module {
 
   socketPause(id){
     console.log("huo",id)
-    socket.on("controlUpdate", (obj) => {
+    this.socket.on("controlUpdate", (obj) => {
       // this._ctx.invokeCallback(
       //   manoverid, // callback id, passed to the method
       //   []
       // );
-      if (obj.id === socket.id)
+      if (obj.id === this.socket.id)
           return;
       console.log(obj);
       if (obj.action === "play") {
@@ -633,11 +634,13 @@ class peerAudioModule extends Module {
   //   });
   // }
   
-
+  socketemit(word,data){
+    return this.socket.emit(word,data);
+  }
 
   //  socket connection establish
-  socketconnection() {
-      socket = io.connect(url);
+  socketconnection(uid) {
+      this.socket = io.connect(url);
 
       function deletePeerData(peerid) {
         var index = -1;
@@ -649,13 +652,16 @@ class peerAudioModule extends Module {
           mypeers.splice(index, 1);
       }
 
-      socket.on("connect", () => {
+      this.socket.on("connect", () => {
           console.log("connected");
-          socket.emit("joinRoom", room);
+          this.socketemit("onlineStatus",uid)
+          // this.socket.emit("joinRoom", room);
+          // this.socketemit("joinRoom",room);
+          this.socket.on("onlineStatus",(uid)=>{
+            console.log("domeel domeeel",uid);
+          })
 
-          console.log("Server:controls");
-
-          socket.on("roomJoinSuccess", () => {
+          this.socket.on("roomJoinSuccess", () => {
             console.log("Room joined");
             var peer = new Peer({
               host: 'peerjs-server-api.herokuapp.com',
@@ -688,7 +694,7 @@ class peerAudioModule extends Module {
               console.log("id generated");
               peer.id = id;
               // sel(".head").innerHTML = id;
-              socket.emit('signal', {
+              this.socket.emit('signal', {
                 peerid: peer.id
               });
             });
@@ -749,7 +755,7 @@ class peerAudioModule extends Module {
               console.log("hittedma");
               // inject(newchip(`! Peer message, ${data}`));
             });
-            socket.on("signal", (d) => {
+            this.socket.on("signal", (d) => {
               console.log(d + "signalled");
               if (d.peerid == peer.id) {
                 console.log("hit oops");
