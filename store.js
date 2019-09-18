@@ -27,7 +27,8 @@ const State = {
     global: global,
     movies: movies,
     selectedMovie: "captainamerica",
-    globalfriends:[]
+    globalfriends:[],
+    myfirends:[],
 }
 
 const listeners = new Set();
@@ -172,9 +173,9 @@ export const downClick = ()=>{
     }
 }
 
-export const watchParty = (arr,movieid,friends,moviename) =>{
+export const watchParty = (arr,movieid,friends,moviename,photo) =>{
     console.log("Instantiated");
-    fbAuth.createWatchParty(arr,movieid,friends,moviename);
+    fbAuth.createWatchParty(arr,movieid,friends,moviename,photo);
 }
 
 listenRecursive = (bobo,friends) => {
@@ -189,10 +190,13 @@ listenRecursive = (bobo,friends) => {
                 lol.push(y); 
             } 
         });
-        State.globalfriends= lol;
-        console.log("listening party new updated arr:",lol);
+        if(friends)
+            State.myfriends= lol
+        else
+           State.globalfriends = lol
+        console.log("listening party new updated arr:",lol,friends);
         updateComponents();
-        listenRecursive(false)
+        listenRecursive(false,friends)
     })
 }
 
@@ -240,7 +244,8 @@ export const connect = (Component)=>{
             movies: State.movies,
             selectedMovie: State.selectedMovie,
             people: State.people,
-            globalfriends: State.globalfriends
+            globalfriends: State.globalfriends,
+            myfriends: State.myfriends,
         }
 
         _listener = ()=>{
@@ -254,7 +259,8 @@ export const connect = (Component)=>{
                 movies: State.movies,
                 selectedMovie: State.selectedMovie,
                 people: State.people,
-                globalfriends: State.globalfriends
+                globalfriends: State.globalfriends,
+                myfriends: State.myfriends,
                 })
         }
 
@@ -275,6 +281,7 @@ export const connect = (Component)=>{
                     selectedMovie = {this.state.selectedMovie}
                     people = {this.state.people}
                     globalfriends = {this.state.globalfriends}
+                    myfriends = {this.state.myfriends}
                 />
             )
         }

@@ -13,18 +13,32 @@ import {
 class Right extends React.Component{
 
     componentWillMount = ()=>{
-        if(this.props.type === "friends")
+        if(this.props.type == "friends")
             listenParty(true)
-        // else
-            // listenParty(false)      
+        else if(this.props.type == "global")
+            listenParty(false)      
     }
 
-    render = ()=>{
-        movies = this.props.movies;
-        list = movies.map((ele,i)=>{
+    renderGlobal(){
+
+        console.log("here",this.props.globalfriends);
+        let joinparty = this.props.globalfriends;
+        list = joinparty.map((ele,i)=>{
             return(
                 <View style={styles.greetingBox}>
-                    <VrButton style={styles.card} onClick={()=>this.props.changePage("video",ele.name)}>
+                    <View>
+                            <Image style={styles.thumbnail} source={{uri : ele.photo}} />
+                    </View>
+                    <View style={{flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
+                        <View>
+                            <Text style={{textAlign:'center',padding:2}}>{ele.name}</Text>
+                        </View>
+                        <VrButton style={{width:150,backgroundColor:'#0690ba',borderRadius:5,marginTop:5}}>
+                            <Text style={{textAlign:'center',padding:2,color:'white'}}> Join Party</Text>
+                        </VrButton>
+
+                    </View>
+                    {/* <VrButton style={styles.card} onClick={()=>this.props.changePage("video",ele.name)}>
                         <View>
                             <Image style={styles.thumbnail} source={asset(`thumbnails/${ele.name}.jpg`)} />
                         </View>
@@ -33,20 +47,36 @@ class Right extends React.Component{
                                 {ele.name}
                             </Text>
                         </View>
-                    </VrButton>
+                    </VrButton> */}
                 </View>
             )
         })
 
+        return list;
+
+    }
+
+    renderFriend(){
+
+    }
+
+    render = ()=>{
+       
+        console.log("here1",this.props.type,this.props.globalfriends)
         return(
-            <View style={styles.panel}>      
-                <Text style={{backgroundColor:"black"}}>{this.props.title}</Text>         
-                {list}
+            <View style={{width: 400,height: 600,}}>  
+                <View style={{height:30,width:400}}>
+                   <Text style={{backgroundColor:"rgba(0,0,0,0.5)",textAlign:'center'}}>{this.props.title}</Text>   
+               </View> 
+             < View style={styles.panel}>
+                {this.renderGlobal()}
                 <VrButton onClick={()=>{console.log(this.props.searchtext)}}>
                     <Text>
                         search
                     </Text>
                 </VrButton>
+             </View>   
+                            
             </View>
         )
     }
@@ -55,31 +85,36 @@ class Right extends React.Component{
 const styles = StyleSheet.create({
     panel: {
       // Fill the entire surface
-      width: 400,
-      height: 600,
+    //   width: 400,
+      height: 570,
       backgroundColor: 'rgba(255, 255, 255, 0.4)',
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column'
     },
     greetingBox: {
-      padding: 20,
-      margin:10,
-      backgroundColor: '#000000',
-      borderColor: '#639dda',
-      borderWidth: 2,
+      padding: 2,
+      margin:3,
+      backgroundColor: 'rgba(0, 0, 0,0.8)',
+    //   borderColor: '#639dda',
+    //   borderWidth: 2,    
+      width: 350,
+      flexDirection: 'row',
+      borderRadius: 10,
+      justifyContent:'space-around'
+
     },
     greeting: {
       fontSize: 30,
     },
     card:{
-        width:300,
+        width:350,
         flexDirection:"row"
         // height: 50
     },
     thumbnail:{
-        width:100,
-        height:50
+        width:60,
+        height:80
     }
   });
 

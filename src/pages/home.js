@@ -53,13 +53,14 @@ class Home extends React.Component{
     })
   }
 
-handleselect(val,val1,val2){
+handleselect(val,val1,val2,val3){
   console.log("betta",val1,val2);
   this.setState({
     selected : val1,
     visible: false,
     first:false,
     id:val2,
+    photo:val3,
   });
   
   // this.props.changePage("video",ele.name)
@@ -77,7 +78,7 @@ handleredirect(){
   
   console.log("myfriends:",myarr)
 
-  watchParty(myarr,this.state.id,true,this.state.selected);
+  watchParty(myarr,this.state.id,true,this.state.selected,this.state.photo);
   // this.props.changePage("video",this.state.selected);
 }
   
@@ -101,7 +102,7 @@ handleredirect(){
         list = searchedmovies.map((ele,i)=>{
             return(
                 <View style={styles.greetingBox}>
-                    <VrButton onClick={()=>this.handleselect("video",ele.name,ele.id)} style={{justifyContent:'center',alignItems:'center'}}>
+                    <VrButton onClick={()=>this.handleselect("video",ele.name,ele.id,ele.photo)} style={{justifyContent:'center',alignItems:'center'}}>
                         <View style={{borderWidth:1,borderColor: 'green'}}>
                             <Image style={(this.state.selected != ele.name && this.state.first == false)?styles.thumbnail2:styles.thumbnail} source={{uri:ele.photo}} />
                         </View>

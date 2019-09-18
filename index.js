@@ -100,7 +100,7 @@ class FriendsPanel extends React.Component{
             title={"friends"}
             type={"friends"}
             searchtext={this.props.searchtext}
-            globalfriends = {this.props.globalfriends}
+            globalfriends = {this.props.myfriends}
             changePage = {changePage}
             movies={this.props.global}
           />

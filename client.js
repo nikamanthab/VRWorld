@@ -433,9 +433,9 @@ getMovies(callbackid){
       )
     }).catch((err)=>rej(err));
 }
-createWatchParty(arr,movieid,friends,moviename){
+createWatchParty(arr,movieid,friends,moviename,photo){
   console.log("inwatch!!");
-     this.db.collection("watchparty").doc(this.u+movieid).set({movieid,invited:arr,initiator:this.u,friends,name:this.username,moviename}).then(()=>{
+     this.db.collection("watchparty").doc(this.u+movieid).set({movieid,invited:arr,initiator:this.u,friends,name:this.username,moviename,photo}).then(()=>{
        console.log("addedwatch");  
      })
 
