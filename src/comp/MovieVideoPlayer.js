@@ -19,23 +19,26 @@ import {
 class Left extends React.Component{
 
     componentWillMount = ()=>{
+      console.log("suzzuka")
       // console.log(validateCommand);
       // speechRecognition.main();
       // peerAudioModule.socketconnection();
     }
 
     render = ()=>{
-
+        console.log("movies yoyo:",this.props.movies,this.props.selectedMovie);
+        let movie = this.props.movies.filter(ele => ele.id == this.props.selectedMovie)
+        console.log("video:",movie);
         return(
                 <View style={{flex: 1}}>
                   <VideoPlayer
                     muted={false}
-                    source={{url: asset(`movies/${this.props.selectedMovie}.mp4`).uri}}
-                    // source={{url: 'https://www.radiantmediaplayer.com/media/bbb-360p.mp4'}}
+                    // source={{url: asset(`movies/${this.props.selectedMovie}.mp4`).uri}}
+                    source={{url: movie[0].video}}
                     stereo={'2D'}
                     style={{
-                      width: 1000,
-                      height: 600,
+                      width: 1200,
+                      height: 720,
                     }}
                   />
                 </View>
@@ -46,8 +49,8 @@ class Left extends React.Component{
 const styles = StyleSheet.create({
     panel: {
       // Fill the entire surface
-      width: 1000,
-      height: 600,
+      width: 1200,
+      height: 720,
       backgroundColor: 'rgba(255, 255, 255, 0.4)',
       justifyContent: 'center',
       alignItems: 'center',

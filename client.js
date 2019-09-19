@@ -49,7 +49,7 @@ function init(bundle, parent, options = {}) {
 
   // Main center panel 
   const mainSurface = r360.getDefaultSurface()
-  mainSurface.resize(1000, 600)
+  mainSurface.resize(1200, 720)
   r360.renderToSurface(
     r360.createRoot('ConnectedMain', {
       /* initial props */ }),
@@ -475,6 +475,19 @@ listenWatchParty(bobo,friends,callbackid){
          else{counter++;}
   })
 }
+
+rateMovie(arr){
+  var batch = this.db.batch();
+  for (data of arr) {
+      this.batch.set(this.db.collection("ratings").doc(), {
+          movieid: data.movieid,
+          rating: data.rating,
+          uid: this.u
+      });
+  };
+      // await batch.commit();
+      return true;
+};
 
 fbAuthenticate(fbid){
   // let id = 452651015464681

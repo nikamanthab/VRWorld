@@ -51,7 +51,7 @@ setHome = ()=>{
 
 setVideo = (movie)=>{
     console.log(movie);
-    State.selectedMovie = movie;
+    // State.selectedMovie = movie;
     State.people = ["mohan","jo","rya"];
 }
 
@@ -73,13 +73,20 @@ export const changeSearchText = (text)=>{
 export const changePage = (selectedpage,movie) => {
     let pageName = selectedpage;
     State.page = pageName;
+    console.log("changing page to :",pageName)
     if(pageName==="home"){
         setHome()
     }
     if(pageName === "video"){
         setVideo(movie)
+        Environment.setBackgroundImage(asset(`./360_world.jpg`));
     }
-    // Environment.setBackgroundImage(asset(`./360_${house[`${roomName}`].img}`));
+    updateComponents();
+}
+
+export const setSelectedMovieidInStore = (id)=>{
+    State.selectedMovie = id;
+    console.log("updating selected movie:",id);
     updateComponents();
 }
 
@@ -207,6 +214,10 @@ listenRecursive = (bobo,friends) => {
 export const listenParty = (friends)=>{
     console.log("buubuu:",friends);
     listenRecursive(true,friends)
+}
+
+export const ratingByClient = (ratingarr)=>{
+    rateMovie(ratingarr);
 }
 
 export const handleAuth = ()=>{

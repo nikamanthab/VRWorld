@@ -15,6 +15,7 @@ class Rate extends React.Component{
     submitRating = (rating)=>{
         console.log(rating);
         // uploadrating()
+        ratingByClient([rating]);
         this.props.changePage("home");
     }
 

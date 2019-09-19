@@ -148,7 +148,8 @@ class VideoPanel extends React.Component{
     if(this.props.page === "video"){
       page = (
       <MovieVideoPlayer
-      selectedMovie={this.props.selectedMovie}
+        movies={this.props.movies}
+        selectedMovie={this.props.selectedMovie}
       />
       )
     }
