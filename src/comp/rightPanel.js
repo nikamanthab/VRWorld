@@ -8,7 +8,7 @@ import {
     Image,
     asset
   } from 'react-360';
-  import {listenParty} from './../../store';
+  import {listenParty, emitJoin} from './../../store';
 
 class Right extends React.Component{
 
@@ -33,7 +33,7 @@ class Right extends React.Component{
                         <View>
                             <Text style={{textAlign:'center',padding:2}}>{ele.name}</Text>
                         </View>
-                        <VrButton style={{width:150,backgroundColor:'#0690ba',borderRadius:5,marginTop:5}}>
+                        <VrButton style={{width:150,backgroundColor:'#0690ba',borderRadius:5,marginTop:5}} onClick={() => emitJoin(ele.movieid,ele.initiator)}>
                             <Text style={{textAlign:'center',padding:2,color:'white'}}> Join Party</Text>
                         </VrButton>
 
