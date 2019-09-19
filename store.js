@@ -217,7 +217,7 @@ export const listenParty = (friends)=>{
 }
 
 export const ratingByClient = (ratingarr)=>{
-    rateMovie(ratingarr);
+    // rateMovie(ratingarr);
 }
 
 export const handleAuth = ()=>{
@@ -231,9 +231,9 @@ export const handleAuth = ()=>{
 
         if(val) {
             setUserId(val2);
-            changePage("home");
             console.log("in comp222:",val2);
             peerAudioModule.socketconnection(val2);
+            changePage("home");
         }
         else{
             // console.log("blah",this.state.checkStatus)
@@ -241,9 +241,9 @@ export const handleAuth = ()=>{
                 if(val){
                     console.log("boomboom:",val2);
                     setUserId(val2);
-                    changePage("home")
                     console.log("in comp222:",val2);
                     peerAudioModule.socketconnection(val2);
+                    changePage("home")
                 }
             });
             // this.props.login();
@@ -252,12 +252,31 @@ export const handleAuth = ()=>{
 }
 
 export const emitJoin = (movieid,userid) =>{
+    let word;
     if(userid == "")
-     let word = State.userid + "-" + movieid;
+     word = State.userid + "-" + movieid;
     else
-     let word = userid + "-" + movieid; 
+     word = userid + "-" + movieid; 
     console.log("word",word);
     peerAudioModule.socketemit("joinRoom", word);
+}
+
+export const controlsocket = (obj)=>{
+    console.log("boo,",obj)
+    peerAudioModule.socketControll(obj);
+}
+
+// export const receivesocket = (obj)=>{
+//     peerAudioModule.
+// }
+
+export const socTrigger = (callback)=>{
+    // console.log("soc trigger called in main");
+    peerAudioModule.socketPause(callback);
+  }
+
+export const leaveParty = () =>{
+    peerAudioModule.sockLeave();
 }
 
 

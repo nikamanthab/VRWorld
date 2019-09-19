@@ -11,7 +11,7 @@ import {
   } from 'react-360';
   import {validateCommand,getCommand} from './../../speech-recognition/p5speech/trie';
   import {VideoPlayer} from './../videoModules/index';
-  const peerAudioModule = NativeModules.peerAudioModule;
+  // const peerAudioModule = NativeModules.peerAudioModule;
 
 
   // const speechRecognition = NativeModules.speechRecognition;

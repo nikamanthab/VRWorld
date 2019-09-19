@@ -10,6 +10,8 @@ import {
     Environment
   } from 'react-360';
 
+  import {leaveParty} from "./../../store"
+
 class Close extends React.Component{
 
     dimLight = ()=>{
@@ -18,12 +20,15 @@ class Close extends React.Component{
     brightLight = ()=>{
         Environment.setBackgroundImage(asset('tv-room.jpg'));
     }
-
+    exitParty(){
+        leaveParty();
+        this.props.changePage("rating")
+    }
     render = ()=>{
         return(
             <View style={styles.panel}>   
                 <View style={styles.greetingBox}>
-                    <VrButton style={styles.card} onClick={()=>this.props.changePage("rating")}>
+                    <VrButton style={styles.card} onClick={()=> this.exitParty()}>
                         <View>
                             <Text style={styles.greeting}>
                                 exit

@@ -8,7 +8,7 @@ import {
     Image,
     asset
   } from 'react-360';
-  import {listenParty, emitJoin} from './../../store';
+  import {listenParty, emitJoin,changePage,setSelectedMovieidInStore} from './../../store';
 
 class Right extends React.Component{
 
@@ -18,7 +18,13 @@ class Right extends React.Component{
         else if(this.props.type == "global") 
             listenParty(false)      
     }
+    movetoParty(movieid,initiator){
+        console.log("movieid",movieid)
+        emitJoin(movieid,initiator);
+        setSelectedMovieidInStore(movieid);
+        changePage("video");
 
+    }
     renderGlobal(){
 
         console.log("here",this.props.globalfriends);
@@ -33,7 +39,7 @@ class Right extends React.Component{
                         <View>
                             <Text style={{textAlign:'center',padding:2}}>{ele.name}</Text>
                         </View>
-                        <VrButton style={{width:150,backgroundColor:'#0690ba',borderRadius:5,marginTop:5}} onClick={() => emitJoin(ele.movieid,ele.initiator)}>
+                        <VrButton style={{width:150,backgroundColor:'#0690ba',borderRadius:5,marginTop:5}} onClick={() => this.movetoParty(ele.movieid,ele.initiator)}>
                             <Text style={{textAlign:'center',padding:2,color:'white'}}> Join Party</Text>
                         </VrButton>
 

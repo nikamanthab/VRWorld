@@ -9,13 +9,15 @@ import {
     asset
   } from 'react-360';
 
+//   import {ratingByClient} from "./../../store"
+
 class Rate extends React.Component{
 
 
     submitRating = (rating)=>{
         console.log(rating);
         // uploadrating()
-        ratingByClient([rating]);
+        // ratingByClient([rating]);
         this.props.changePage("home");
     }
 
