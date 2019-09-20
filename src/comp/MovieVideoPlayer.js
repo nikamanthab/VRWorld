@@ -30,7 +30,7 @@ class Left extends React.Component{
         let movie = this.props.movies.filter(ele => ele.id == this.props.selectedMovie)
         console.log("video:",movie);
         return(
-                <View style={{flex: 1}}>
+                <View style={[styles.border,{flex: 1}]}>
                   <VideoPlayer
                     muted={false}
                     // source={{url: asset(`movies/${this.props.selectedMovie}.mp4`).uri}}
@@ -74,6 +74,10 @@ const styles = StyleSheet.create({
     thumbnail:{
         width:100,
         height:50
+    },
+    border:{
+      // borderColor:"white",
+      // borderWidth:5
     }
   });
 

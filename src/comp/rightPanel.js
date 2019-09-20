@@ -72,15 +72,15 @@ class Right extends React.Component{
         return(
             <View style={{width: 400,height: 600,}}>  
                 <View style={{height:30,width:400}}>
-                   <Text style={{backgroundColor:"rgba(0,0,0,0.5)",textAlign:'center'}}>{this.props.title}</Text>   
+                   <Text style={{fontSize:25,backgroundColor:"rgba(0,0,0,0.5)",textAlign:'center'}}>{this.props.title}</Text>   
                </View> 
              < View style={styles.panel}>
                 {this.renderGlobal()}
-                <VrButton onClick={()=>{console.log(this.props.searchtext)}}>
+                {/* <VrButton onClick={()=>{console.log(this.props.searchtext)}}>
                     <Text>
                         search
                     </Text>
-                </VrButton>
+                </VrButton> */}
              </View>   
                             
             </View>

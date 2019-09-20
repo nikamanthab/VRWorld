@@ -11,31 +11,56 @@ import {
   } from 'react-360';
 
   import {leaveParty} from "./../../store"
+  import AnimatedBtn from "./animatedBtn";
+  import bulb from './../../static_assets/bulb.png';
 
 class Close extends React.Component{
+    state={
+        bright:true
+    }
 
     dimLight = ()=>{
-        Environment.setBackgroundImage(asset('360_world.jpg'));
+        Environment.setBackgroundImage(asset('milky1.jpg'));
     }
     brightLight = ()=>{
-        Environment.setBackgroundImage(asset('tv-room.jpg'));
+        Environment.setBackgroundImage(asset('milky2.jpg'));
     }
     exitParty(){
         leaveParty();
         this.props.changePage("rating")
     }
+
+    brightDim = ()=>{
+        this.setState({
+            bright:!this.state.bright
+        },()=>{
+            if(!this.state.bright){
+                this.brightLight()
+            }
+            else{
+                this.dimLight()
+            }
+        })
+    }
+
     render = ()=>{
         return(
             <View style={styles.panel}>   
-                <View style={styles.greetingBox}>
-                    <VrButton style={styles.card} onClick={()=> this.exitParty()}>
+                <View style={{flexDirection:"row"}}>
+                    <View>
+                        <AnimatedBtn icon={bulb} onClick={()=>{this.exitParty()}} text={"Exit"} />
+                    </View>
+                    <View>
+                        <AnimatedBtn icon={bulb} onClick={()=>{this.brightDim()}} text={"light"} />  
+                    </View>
+                    {/* <VrButton style={styles.card} onClick={()=> this.exitParty()}>
                         <View>
                             <Text style={styles.greeting}>
                                 exit
                             </Text>
                         </View>
-                    </VrButton>
-                    </View>
+                    </VrButton> */}
+                    {/* </View>
                     <View style={styles.greetingBox}>
                         <VrButton style={styles.card} onClick={this.dimLight}>
                             <View>
@@ -52,7 +77,7 @@ class Close extends React.Component{
                                     light
                                 </Text>
                             </View>
-                        </VrButton>
+                        </VrButton> */}
                     </View>
                 </View>
         )

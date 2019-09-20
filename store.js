@@ -28,6 +28,7 @@ const State = {
     people: null,
     global: global,
     movies: movies,
+    movieid: null,
     selectedMovie: "captainamerica",
     globalfriends:[],
     myfriends:[],
@@ -75,11 +76,12 @@ export const changePage = (selectedpage,movie) => {
     State.page = pageName;
     console.log("changing page to :",pageName)
     if(pageName==="home"){
+        Environment.setBackgroundImage(asset(`./aurora.jpg`));
         setHome()
     }
     if(pageName === "video"){
         setVideo(movie)
-        Environment.setBackgroundImage(asset(`./360_world.jpg`));
+        Environment.setBackgroundImage(asset(`./milky1.jpg`));
     }
     updateComponents();
 }
@@ -217,7 +219,9 @@ export const listenParty = (friends)=>{
 }
 
 export const ratingByClient = (ratingarr)=>{
-    // rateMovie(ratingarr);
+    let sendarr=[{"rating":ratingarr,"uid":State.userid,"movieid":State.selectedMovie}];
+    console.log("rating in store",sendarr);
+    fbAuth.rateMovie(sendarr);
 }
 
 export const handleAuth = ()=>{

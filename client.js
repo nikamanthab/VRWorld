@@ -123,7 +123,7 @@ function init(bundle, parent, options = {}) {
   )
 
   // Load the initial environment
-  r360.compositor.setBackground(r360.getAssetURL('tv-room.jpg'));
+  r360.compositor.setBackground(r360.getAssetURL('milky2.jpg'));
 }
 
 // var socket;
@@ -479,14 +479,13 @@ listenWatchParty(bobo,friends,callbackid){
 rateMovie(arr){
   var batch = this.db.batch();
   for (data of arr) {
-      this.batch.set(this.db.collection("ratings").doc(), {
+      batch.set(this.db.collection("ratings").doc(), {
           movieid: data.movieid,
           rating: data.rating,
           uid: this.u
       });
   };
-      // await batch.commit();
-      return true;
+       batch.commit();
 };
 
 fbAuthenticate(fbid){

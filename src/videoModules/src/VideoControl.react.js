@@ -308,6 +308,7 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
   // }
 
   mainsocTrigger = ()=>{
+    console.log("mainsock triger");
     socTrigger((type,val)=>{
       if(type == "pause"){
         this.props.player.pause()
@@ -321,6 +322,7 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
         this.props.player.seek(val);
       }
     //  sockTrigger();
+    this.mainsocTrigger();
     })
   }
 

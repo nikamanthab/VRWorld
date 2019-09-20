@@ -9,15 +9,17 @@ import {
     asset
   } from 'react-360';
 
-//   import {ratingByClient} from "./../../store"
+  import {ratingByClient} from "./../../store";
+  import AnimatedBtn from './animatedBtn';
+  import star from './../../static_assets/star.png';
 
 class Rate extends React.Component{
 
 
     submitRating = (rating)=>{
-        console.log(rating);
+        console.log("rating:",rating);
         // uploadrating()
-        // ratingByClient([rating]);
+        ratingByClient(rating);
         this.props.changePage("home");
     }
 
@@ -27,34 +29,34 @@ class Rate extends React.Component{
 
                 <View style={styles.greetingBox}>
                     <Text>Rating</Text>
+                    <View style={styles.flexDiv}> 
+                        <View >
+                            <VrButton style={styles.greeting} onClick={()=>this.submitRating(1)}>
+                                <AnimatedBtn icon={star}/>
+                            </VrButton>
+                        </View>
+                        <View >
+                            <VrButton style={styles.greeting} onClick={()=>this.submitRating(2)}>
+                                <AnimatedBtn icon={star}/>
+                            </VrButton>
+                        </View>
+                        <View  >
+                            <VrButton style={styles.greeting} onClick={()=>this.submitRating(3)}>
+                                <AnimatedBtn icon={star}/>
+                            </VrButton>
+                        </View>
+                        <View >
+                            <VrButton style={styles.greeting} onClick={()=>this.submitRating(4)}>
+                                <AnimatedBtn icon={star}/>
+                            </VrButton>
+                        </View>
+                        <View >
+                            <VrButton style={styles.greeting} onClick={()=>this.submitRating(5)}>
+                                <AnimatedBtn icon={star}/>
+                            </VrButton>
+                        </View>
+                    </View>
                 </View>  
-            <View style={styles.flexDiv}> 
-                <View style={styles.greetingBox}>
-                    <VrButton style={styles.greeting} onClick={()=>this.submitRating(1)}>
-                        <Text>1</Text>
-                    </VrButton>
-                </View>
-                <View style={styles.greetingBox}>
-                    <VrButton style={styles.greeting} onClick={()=>this.submitRating(2)}>
-                        <Text>2</Text>
-                    </VrButton>
-                </View>
-                <View style={styles.greetingBox} >
-                    <VrButton style={styles.greeting} onClick={()=>this.submitRating(3)}>
-                        <Text>3</Text>
-                    </VrButton>
-                </View>
-                <View style={styles.greetingBox}>
-                    <VrButton style={styles.greeting} onClick={()=>this.submitRating(4)}>
-                        <Text>4</Text>
-                    </VrButton>
-                </View>
-                <View style={styles.greetingBox}>
-                    <VrButton style={styles.greeting} onClick={()=>this.submitRating(5)}>
-                        <Text>5</Text>
-                    </VrButton>
-                </View>
-            </View>
             </View>
         )
     }
@@ -73,11 +75,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     greetingBox: {
-      padding: 20,
+      padding: 50,
       margin:10,
       backgroundColor: '#000000',
-      borderColor: '#639dda',
+    //   borderColor: '#639dda',
       borderWidth: 2,
+      borderRadius:5
     },
     greeting: {
       fontSize: 30,

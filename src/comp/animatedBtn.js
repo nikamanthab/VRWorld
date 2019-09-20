@@ -56,50 +56,99 @@ export default class InfoButton extends React.Component {
   };
 
   render() {
-    return (
-      <View
-        style={[
-          styles.wrapper,
-          this.props.style,
-          {width: this.props.width * FOCUS_SCALE}
-        ]}>
-        <VrButton
-          onClick={this._click} //this event trigger when click the view
-          onExit={this._blur} //this event trigger when cursor move out of the view
-          onEnter={this._focus} //this event trigger when cursor move into of the view
-          onClickSound={CLICK_SOUND}
-          onEnterSound={CLICK_SOUND}
-          onExitSound={CLICK_SOUND}
-          onLongClickSound={CLICK_SOUND}
-          >
-          <Animated.View
-            style={[
-              styles.button,
-              this.state.hasFocus && styles.buttonFocused,
-              {
-                // With this the width of the this view
-                // is animated with the value of scaleAnim
-                // by an interpolation
-                height: this.state.scaleAnim.interpolate({
+
+    let icon = ((this.props.icon)?<Image style={styles.icon} source={this.props.icon}/>:<View></View>)
+    if(this.props.text){
+      return (
+        <View
+          style={[
+            styles.wrapper,
+            this.props.style,
+            {width: this.props.width * FOCUS_SCALE}
+          ]}>
+          <VrButton
+            onClick={this._click} //this event trigger when click the view
+            onExit={this._blur} //this event trigger when cursor move out of the view
+            onEnter={this._focus} //this event trigger when cursor move into of the view
+            // onClickSound={CLICK_SOUND}
+            // onEnterSound={CLICK_SOUND}
+            // onExitSound={CLICK_SOUND}
+            // onLongClickSound={CLICK_SOUND}
+            >
+            <Animated.View
+              style={[
+                styles.button,
+                this.state.hasFocus && styles.buttonFocused,
+                {
+                  // With this the width of the this view
+                  // is animated with the value of scaleAnim
+                  // by an interpolation
+                  height: this.state.scaleAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [this.props.height, this.props.height * FOCUS_SCALE],
+                    }),
+                  width: this.state.scaleAnim.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [this.props.height, this.props.height * FOCUS_SCALE],
+                    outputRange: [this.props.width, this.props.width * FOCUS_SCALE],
                   }),
-                width: this.state.scaleAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [this.props.width, this.props.width * FOCUS_SCALE],
-                }),
-              }]}>
-              <Text style={styles.text}>
-                {this.props.text}
-              </Text>
-          </Animated.View>
-        </VrButton>
-      </View>
-    );
+                }]}>
+                <Text style={styles.text}>
+                  {this.props.text}
+                </Text>
+                {icon}
+            </Animated.View>
+          </VrButton>
+        </View>
+      );
+    }
+    else{
+      return(
+        <View
+          style={[
+            styles.wrapper,
+            this.props.style,
+            {width: 100 * FOCUS_SCALE}
+          ]}>
+          <VrButton
+            onClick={this._click} //this event trigger when click the view
+            onExit={this._blur} //this event trigger when cursor move out of the view
+            onEnter={this._focus} //this event trigger when cursor move into of the view
+            // onClickSound={CLICK_SOUND}
+            // onEnterSound={CLICK_SOUND}
+            // onExitSound={CLICK_SOUND}
+            // onLongClickSound={CLICK_SOUND}
+            >
+            <Animated.View
+              style={[
+                // styles.button,
+                // this.state.hasFocus && styles.buttonFocused,
+                {
+                  // With this the width of the this view
+                  // is animated with the value of scaleAnim
+                  // by an interpolation
+                  height: this.state.scaleAnim.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [this.props.height, this.props.height * FOCUS_SCALE],
+                    }),
+                  width: this.state.scaleAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [this.props.width, this.props.width * FOCUS_SCALE],
+                  }),
+                }]}>
+                {icon}
+            </Animated.View>
+          </VrButton>
+        </View>
+        )
+    }
   }
 }
 
 const styles = StyleSheet.create({
+  icon:{
+    width:10,
+    height:10
+  },
   wrapper: {
     justifyContent: 'center',
     alignItems: 'center',
