@@ -18,6 +18,7 @@ console.log("hmmm",friends);
 const State = {
     // someart:undefined,
     userid:undefined,
+    username:"",
     friendlistpage: 1,
     // userid:452651015464681,
     friendsactive:true,
@@ -56,8 +57,9 @@ setVideo = (movie)=>{
     State.people = ["mohan","jo","rya"];
 }
 
-export const setUserId = (val)=>{
+export const setUserId = (val,resname)=>{
     State.userid = val;
+    State.username = resname;
     console.log("useridset:",val);
     updateComponents();
 }
@@ -226,7 +228,7 @@ export const ratingByClient = (ratingarr)=>{
 
 export const handleAuth = ()=>{
     console.log("ole:",fbAuth)
-    fbAuth.fbsetup( (val,val2) => {
+    fbAuth.fbsetup( (val,val2,resname) => {
         console.log("in comp",val,val2)
         // this.setState({
         //   checkStatus: val,
@@ -234,17 +236,17 @@ export const handleAuth = ()=>{
         // });
 
         if(val) {
-            setUserId(val2);
+            setUserId(val2,resname);
             console.log("in comp222:",val2);
             peerAudioModule.socketconnection(val2);
             changePage("home");
         }
         else{
             // console.log("blah",this.state.checkStatus)
-            fbAuth.fbAuthenticate((val,val2) => {
+            fbAuth.fbAuthenticate((val,val2,resname) => {
                 if(val){
                     console.log("boomboom:",val2);
-                    setUserId(val2);
+                    setUserId(val2,resname);
                     console.log("in comp222:",val2);
                     peerAudioModule.socketconnection(val2);
                     changePage("home")
@@ -297,6 +299,7 @@ export const connect = (Component)=>{
             people: State.people,
             globalfriends: State.globalfriends,
             myfriends: State.myfriends,
+            username:State.username,
         }
 
         _listener = ()=>{
@@ -312,6 +315,7 @@ export const connect = (Component)=>{
                 people: State.people,
                 globalfriends: State.globalfriends,
                 myfriends: State.myfriends,
+                username: State.username,
                 })
         }
 
@@ -333,6 +337,7 @@ export const connect = (Component)=>{
                     people = {this.state.people}
                     globalfriends = {this.state.globalfriends}
                     myfriends = {this.state.myfriends}
+                    username = {this.state.username}
                 />
             )
         }

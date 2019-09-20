@@ -46,13 +46,19 @@ class Close extends React.Component{
     render = ()=>{
         return(
             <View style={styles.panel}>   
-                <View style={{flexDirection:"row"}}>
-                    <View>
-                        <AnimatedBtn icon={bulb} onClick={()=>{this.exitParty()}} text={"Exit"} />
-                    </View>
-                    <View>
+                <View style={{flexDirection:"row",justifyContent:'space-around',width:800}}>
+                    
+                        {/* <AnimatedBtn icon={bulb} onClick={()=>{this.exitParty()}} text={"Exit"} /> */}
+                        <VrButton style={{borderRadius:5,backgroundColor:"#0690ba",height:50,width:150,justifyContent:'center',textAlign:'center'}} onClick={()=>{this.exitParty()}}>
+                            <Text style={{textAlign:'center',color:'white',fontWeight:'bold'}}> Exit </Text>
+                        </VrButton>
+                    
+                    {/* <View>
                         <AnimatedBtn icon={bulb} onClick={()=>{this.brightDim()}} text={"light"} />  
-                    </View>
+                    </View> */}
+                       <VrButton style={{borderRadius:5,backgroundColor:"#0690ba",height:50,width:150,justifyContent:'center',textAlign:'center'}} onClick={()=>{this.brightDim()}}>
+                            <Text style={{textAlign:'center',color:'white',fontWeight:'bold'}}> Light </Text>
+                        </VrButton>
                     {/* <VrButton style={styles.card} onClick={()=> this.exitParty()}>
                         <View>
                             <Text style={styles.greeting}>

@@ -15,7 +15,7 @@ import createGlyph from 'createGlyph';
 import type {VideoPlayerStatus, VideoStatusEvent} from 'VideoModule';
 import io from 'socket.io-client';
 // const peerAudioModule = NativeModules.peerAudioModule;
-// const speechRecognition = NativeModules.speechRecognition;
+const speechRecognition = NativeModules.speechRecognition;
 
 import {controlsocket,socTrigger} from './../../../store';
 
@@ -251,44 +251,44 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     return val;
   }
 
-  // speechLogic = ()=>{
-  //   speechRecognition.main( (val) => {
-  //     console.log(val);
-  //     if(val == "play"){
-  //       this.props.player.resume();
-  //       // peerAudioModule.socketControll({status: "playing",position: this.state.position});
-  //       controlsocket({status: "playing",position: this.state.position});
+  speechLogic = ()=>{
+    speechRecognition.main( (val) => {
+      console.log(val);
+      if(val == "play"){
+        this.props.player.resume();
+        // peerAudioModule.socketControll({status: "playing",position: this.state.position});
+        controlsocket({status: "playing",position: this.state.position});
 
-  //     }
-  //     else if(val == "pause"){
-  //       this.props.player.pause();
-  //       // peerAudioModule.socketControll({status: "paused",position: this.state.position});
-  //       controlsocket({status: "paused",position: this.state.position})
-  //     }
-  //     else if(val == "v+"){
-  //       this.props.player.setVolume(this.incVol(this.state.volume + 0.2));
-  //       // this.setState({volume:1})
+      }
+      else if(val == "pause"){
+        this.props.player.pause();
+        // peerAudioModule.socketControll({status: "paused",position: this.state.position});
+        controlsocket({status: "paused",position: this.state.position})
+      }
+      else if(val == "v+"){
+        this.props.player.setVolume(this.incVol(this.state.volume + 0.2));
+        // this.setState({volume:1})
 
-  //     }
-  //     else if(val == "v-"){
-  //       this.props.player.setVolume(this.incVol(this.state.volume - 0.2));
-  //       // this.setState({volume:0})
+      }
+      else if(val == "v-"){
+        this.props.player.setVolume(this.incVol(this.state.volume - 0.2));
+        // this.setState({volume:0})
 
-  //     }
-  //     else if(! isNaN(val)){
-  //       // this.props.player.seek(this.state.duration*val/100);
+      }
+      else if(! isNaN(val)){
+        // this.props.player.seek(this.state.duration*val/100);
 
-  //       // peerAudioModule.socketControll({status: "ready",position: val});
-  //       controlsocket({status: "ready",position: val});
-  //       this.props.player.seek(val);
-  //       // this.setState({position: val});
+        // peerAudioModule.socketControll({status: "ready",position: val});
+        controlsocket({status: "ready",position: val});
+        this.props.player.seek(val);
+        // this.setState({position: val});
 
-  //       // this.props.player.resume();
-  //     }
+        // this.props.player.resume();
+      }
 
-  //     this.speechLogic();
-  //   });
-  // }
+      this.speechLogic();
+    });
+  }
 
   // socTrigger = ()=>{
   //   peerAudioModule.socketPause((type,val)=>{
@@ -331,7 +331,7 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     console.log("Fuckkkkkkkkkkkkkkkk Jooooooooooooo");
     // console.log();
     this.mainsocTrigger();
-    // this.speechLogic()
+    this.speechLogic()
     // this.socSeek()
     // this.socPlay()
     
@@ -384,6 +384,9 @@ class VideoControl extends React.PureComponent<VideoControlProps> {
     if (this.props.player) {
       this._registerEventListener(this.props.player, null);
     }
+    console.log("removed video!");
+    speechRecognition.stopMic();
+
   }
 
  

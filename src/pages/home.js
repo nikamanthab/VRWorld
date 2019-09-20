@@ -127,7 +127,7 @@ handleredirect(){
           <View style={styles.panel}>
             <View style={styles.header}>
                 <Text style={styles.greeting}>
-                  Movie Collection
+                  {"Welcome, " + this.props.username}
                 </Text>
             </View>
           
@@ -193,7 +193,8 @@ const styles = StyleSheet.create({
     },
     greeting: {
       fontSize: 30,
-      textAlign: 'center'
+      textAlign: 'center',
+      fontWeight:'bold'
     },
     card:{
       // width:275,

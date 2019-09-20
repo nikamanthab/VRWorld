@@ -138,6 +138,7 @@ class speechRecognition extends Module{
   constructor(ctx){
     super('speechRecognition')
     this._ctx = ctx;
+    this.speechRec = null;
     // console.log(ctx);
 
   }
@@ -148,9 +149,9 @@ class speechRecognition extends Module{
      
     //MAIN
      gotSpeech =()=> {
-      if(speechRec.resultValue){
+      if(this.speechRec.resultValue){
         clearTimeout(timeoutID);
-        speechString = speechRec.resultString;
+        speechString = this.speechRec.resultString;
         timeoutID = setTimeout(() => {
           var command = getCommand(validateCommand(speechString));
           console.log("hullo",command);
@@ -178,11 +179,17 @@ class speechRecognition extends Module{
     var speechString = "";
 
     var lang = 'en-IN';
-    var speechRec = new p5.SpeechRec(lang ,gotSpeech);
+    this.speechRec = new p5.SpeechRec(lang ,gotSpeech);
     var continuous = true;
     var interim = true;
-    speechRec.start(continuous, interim);
+    this.speechRec.start(continuous, interim);
+    console.log("speechrec",this.speechRec)
 
+  }
+
+  stopMic(){
+    this.speechRec.continuous = false;
+    console.log("after",this.speechRec);
   }
 
 }
@@ -244,12 +251,13 @@ class fbAuth extends Module{
               // console.log("here",data);
               console.log("hi theeee",response);
               this.userid = response.id;
-              this.username = response.name;
+              // this.username = response.name;
+              this.username = response.name.toLowerCase().replace(/\s+/,"");
               this.controller(this.firlibConfig,response.id)
         
               this._ctx.invokeCallback(
                 id, // callback id, passed to the method
-                [true,response.id]
+                [true,response.id,this.username]
               );
             }
           }
@@ -500,16 +508,19 @@ fbAuthenticate(fbid){
           if (response && !response.error) {
             console.log("hi theeee",response.name,response.id);// code here
             userid = response.id;
-            this.username= response.name;
+            // this.username= response.name;
             this.controller(this.firlibConfig,response.id);
             console.log("after init");
             // console.log(fireregister);
-            this.register(response.name,"http://graph.facebook.com/"+response.id+"/picture?type=large&width=720&height=720").then(data =>{
+            let resname=response.name.toLowerCase().replace(/\s+/,"");
+            this.username = resname;
+            console.log("resname",resname);
+            this.register(resname,"http://graph.facebook.com/"+response.id+"/picture?type=large&width=720&height=720").then(data =>{
               if(data){
               console.log("registered:",response.id);
               this._ctx.invokeCallback(
                 fbid, // callback id, passed to the method
-                [true,response.id ]
+                [true,response.id,resname ]
               );
             }
             })
@@ -671,155 +682,6 @@ class peerAudioModule extends Module {
 
 
   ///
-   
-  roomJoinLogic(){
-    if(!(this.socket.firstVisit)){
-      this.socket.firstVisit=true;
-    }
-    console.log("Room joined");
-    var peer = new Peer({
-      // host:'192.168.0.103:3000',
-      host: 'peerjs-server-api.herokuapp.com',
-      path:'/peer',
-      secure: true,
-      port: 443,
-      // port: 3000,
-      config: {
-        'iceServers': [{
-          url: 'stun:stun1.l.google.com:19302'
-        }]
-      }
-    });
-    this.peerx = peer;
-    console.log("peerx:",peer) 
-
-    peer.on("connection", (c) => {
-      // sel("#conn").innerHTML += c.peer + ",";
-
-      //PUSH CONN TO CONN LIST FINALLY
-      this.mypeers=this.deletePeerData(c.peer,this.mypeers);
-      this.mypeers.push(c);
-      console.log(c);
-      console.log("pushed");
-      c.on('data', function (data) {
-        console.log("hit");
-        // inject(newchip(`Peer message, ${data}`));
-      });
-      callPeer(c.peer);
-    });
-
-    peer.on('open', (id) => {
-      console.log("id generated");
-      peer.id = id;
-      // sel(".head").innerHTML = id;
-      this.socket.emit('signal', {
-        peerid: peer.id
-      });
-    });
-
-      callPeer = (id) => {
-      console.log(id + "call");
-      var call;
-      navigator.mediaDevices.getUserMedia({
-        audio: true,
-      }).then((stream) => {
-        this.callStreams.push(stream);
-        console.log("mypeersIt1",this.callStreams)
-        call = peer.call(id, stream);
-        var callpeer = this.mypeers.filter(x => x.peer == call.peer)[0];
-        if (callpeer) {
-            callpeer.call = call;
-            console.log("call object injected");
-        }
-        call.on('stream', (stream) => {
-          console.log("received stream answered");
-          // var audio = document.createElement("audio");
-          var audio = new Audio();
-          audio.srcObject = stream;
-          // audio.style.display = "none";
-          // sel("#wrapper").appendChild(audio);
-          audio.play();
-          // let b = new Audio();
-          // b.muted = true;
-          // b.srcObject = stream;
-
-          // var peerInput = context.createMediaStreamSource(
-          //     stream);
-          // console.log("connecting to dest");
-          // peerInput.connect(context.destination);
-        });
-      })
-    }
-    peer.on('call', (call) => {
-      // inject(newchip("call received"));
-      var callpeer = this.mypeers.filter(x => x.peer == call.peer)[0];
-      if (callpeer) {
-                  callpeer.call = call;
-                   console.log("call object injected after receiuvingli");
-          }
-      navigator.mediaDevices.getUserMedia({
-        audio: true,
-      }).then((stream) => {
-        this.callStreams.push(stream);
-        console.log("mystreamsIT",this.callStreams);
-        call.answer(stream);
-        call.on('stream', function (stream) {
-          console.log("received stream");
-          var audio = new Audio();
-          // var audio = document.createElement("audio");
-          audio.srcObject = stream;
-          // audio.style.display = "none";
-          // sel("#wrapper").appendChild(audio);
-          audio.play();
-          // let a = new Audio();
-          // a.muted = true;
-          // a.srcObject = stream;
-          // var peerInput = context
-          //     .createMediaStreamSource(
-          //         stream);
-          // console.log("connecting to dest");
-          // peerInput.connect(context.destination);
-          // inject(newchip("Done"));
-        });
-      });
-    });
-    peer.on('data', function (data) {
-      console.log("hittedma");
-      // inject(newchip(`! Peer message, ${data}`));
-    });
-    this.socket.on("signal", (d) => {
-      console.log(d + "signalled");
-      if (d.peerid == peer.id) {
-        console.log("hit oops");
-        return;
-      }
-      var conn = peer.connect(d.peerid, {
-        reliable: true
-      });
-      console.log("peer added");
-      conn.on('open', () => {
-        console.log("connectedtopeer");
-        console.log(conn);
-        this.mypeers.push(conn);
-        console.log("pushed to no of peers");
-        // sel("#conn").innerHTML += conn.peer + ",";
-        conn.on('data', function (data) {
-          console.log("hittedma");
-          // inject(newchip(`Peer message, ${data}`));
-        });
-      });
-    });
-
-    this.socket.on('newLeaving', (data) => {
-      if(this.mypeers.find(x=>x.peer==data.leftPeerid))
-      {
-      this.mypeers.filter(x =>{return x.peer == data.leftPeerid})[0].call.close();
-      this.mypeers=this.deletePeerData(data.leftPeerid, this.mypeers);
-      console.log("deletepeers",this.mypeers)
-      }
-      console.log(`${data.leftPeerid} LEFT THE ROOM`);                      
-    });
-  }
   
   deletePeerData(peerid, mypeers) {
     console.log(peerid,mypeers.filter(x => x.peer != peerid),"checkyu");
@@ -843,7 +705,154 @@ class peerAudioModule extends Module {
             console.log("domeel domeeel",uid);
           })
 
-          this.socket.on("roomJoinSuccess", () => this.roomJoinLogic() )
+          this.socket.on("roomJoinSuccess", () => {
+            if(!(this.socket.firstVisit)){
+              this.socket.firstVisit=true;
+            }
+            console.log("Room joined");
+            var peer = new Peer({
+              // host:'192.168.0.103:3000',
+              host: 'peerjs-server-api.herokuapp.com',
+              path:'/peer',
+              secure: true,
+              port: 443,
+              // port: 3000,
+              config: {
+                'iceServers': [{
+                  url: 'stun:stun1.l.google.com:19302'
+                }]
+              }
+            });
+            this.peerx = peer;
+            console.log("peerx:",peer) 
+        
+            peer.on("connection", (c) => {
+              // sel("#conn").innerHTML += c.peer + ",";
+        
+              //PUSH CONN TO CONN LIST FINALLY
+              this.mypeers=this.deletePeerData(c.peer,this.mypeers);
+              this.mypeers.push(c);
+              console.log(c);
+              console.log("pushed");
+              c.on('data', function (data) {
+                console.log("hit");
+                // inject(newchip(`Peer message, ${data}`));
+              });
+              callPeer(c.peer);
+            });
+        
+            peer.on('open', (id) => {
+              console.log("id generated");
+              peer.id = id;
+              // sel(".head").innerHTML = id;
+              this.socket.emit('signal', {
+                peerid: peer.id
+              });
+            });
+        
+              callPeer = (id) => {
+              console.log(id + "call");
+              var call;
+              navigator.mediaDevices.getUserMedia({
+                audio: true,
+              }).then((stream) => {
+                this.callStreams.push(stream);
+                console.log("mypeersIt1",this.callStreams)
+                call = peer.call(id, stream);
+                var callpeer = this.mypeers.filter(x => x.peer == call.peer)[0];
+                if (callpeer) {
+                    callpeer.call = call;
+                    console.log("call object injected");
+                }
+                call.on('stream', (stream) => {
+                  console.log("received stream answered");
+                  // var audio = document.createElement("audio");
+                  var audio = new Audio();
+                  audio.srcObject = stream;
+                  // audio.style.display = "none";
+                  // sel("#wrapper").appendChild(audio);
+                  audio.play();
+                  // let b = new Audio();
+                  // b.muted = true;
+                  // b.srcObject = stream;
+        
+                  // var peerInput = context.createMediaStreamSource(
+                  //     stream);
+                  // console.log("connecting to dest");
+                  // peerInput.connect(context.destination);
+                });
+              })
+            }
+            peer.on('call', (call) => {
+              // inject(newchip("call received"));
+              var callpeer = this.mypeers.filter(x => x.peer == call.peer)[0];
+              if (callpeer) {
+                          callpeer.call = call;
+                           console.log("call object injected after receiuvingli");
+                  }
+              navigator.mediaDevices.getUserMedia({
+                audio: true,
+              }).then((stream) => {
+                this.callStreams.push(stream);
+                console.log("mystreamsIT",this.callStreams);
+                call.answer(stream);
+                call.on('stream', function (stream) {
+                  console.log("received stream");
+                  var audio = new Audio();
+                  // var audio = document.createElement("audio");
+                  audio.srcObject = stream;
+                  // audio.style.display = "none";
+                  // sel("#wrapper").appendChild(audio);
+                  audio.play();
+                  // let a = new Audio();
+                  // a.muted = true;
+                  // a.srcObject = stream;
+                  // var peerInput = context
+                  //     .createMediaStreamSource(
+                  //         stream);
+                  // console.log("connecting to dest");
+                  // peerInput.connect(context.destination);
+                  // inject(newchip("Done"));
+                });
+              });
+            });
+            peer.on('data', function (data) {
+              console.log("hittedma");
+              // inject(newchip(`! Peer message, ${data}`));
+            });
+            this.socket.on("signal", (d) => {
+              console.log(d + "signalled");
+              if (d.peerid == peer.id) {
+                console.log("hit oops");
+                return;
+              }
+              var conn = peer.connect(d.peerid, {
+                reliable: true
+              });
+              console.log("peer added");
+              conn.on('open', () => {
+                console.log("connectedtopeer");
+                console.log(conn);
+                this.mypeers.push(conn);
+                console.log("pushed to no of peers");
+                // sel("#conn").innerHTML += conn.peer + ",";
+                conn.on('data', function (data) {
+                  console.log("hittedma");
+                  // inject(newchip(`Peer message, ${data}`));
+                });
+              });
+            });
+        
+            this.socket.on('newLeaving', (data) => {
+              if(this.mypeers.find(x=>x.peer==data.leftPeerid))
+              {
+              this.mypeers.filter(x =>{return x.peer == data.leftPeerid})[0].call.close();
+              this.mypeers=this.deletePeerData(data.leftPeerid, this.mypeers);
+              console.log("deletepeers",this.mypeers)
+              }
+              console.log(`${data.leftPeerid} LEFT THE ROOM`);                      
+            });
+          } )
 
         })
       }
@@ -859,10 +868,11 @@ class peerAudioModule extends Module {
           micstream.getTracks().forEach(x => x.stop());
       });
       console.log("mypeers1",this.mypeers);
-      console.log("mystreams1",this.callStreams);
+      console.log("mystreams1",this.callStreams,this.peerx);
       this.socket.emit('leaving', {
           peerid: this.peerx.id
       });
+      console.log("mystreams12",this.peerx);
       this.peerx.destroy();
       this.mypeers=[];
       this.callStreams=[];

@@ -119,7 +119,7 @@ export default class InfoButton extends React.Component {
             // onLongClickSound={CLICK_SOUND}
             >
             <Animated.View
-              style={[
+              style={[{justifyContent:'center'},
                 // styles.button,
                 // this.state.hasFocus && styles.buttonFocused,
                 {
@@ -147,7 +147,7 @@ export default class InfoButton extends React.Component {
 const styles = StyleSheet.create({
   icon:{
     width:10,
-    height:10
+    height:10,
   },
   wrapper: {
     justifyContent: 'center',

@@ -28,7 +28,9 @@ class Rate extends React.Component{
             <View style={styles.panel}>
 
                 <View style={styles.greetingBox}>
-                    <Text>Rating</Text>
+                    <View style={{margin:40}}>
+                      <Text style={{fontWeight:'bold',textAlign:'center',fontSize:50}}>Rating</Text>
+                    </View>  
                     <View style={styles.flexDiv}> 
                         <View >
                             <VrButton style={styles.greeting} onClick={()=>this.submitRating(1)}>
@@ -67,20 +69,26 @@ const styles = StyleSheet.create({
       // Fill the entire surface
       width: 1000,
       height: 600,
-      backgroundColor: 'rgba(255, 255, 255, 0.4)',
-      justifyContent: 'center',
-      alignItems: 'center',
+    //   backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    //   justifyContent: 'center',
+    //   alignItems: 'center',
     },
     flexDiv:{
-        flexDirection: 'row'
+        flexDirection: 'row',
+        // borderWidth:3,
+        // borderColor:'red',
+        alignItems:'center',
+        paddingLeft:60
     },
     greetingBox: {
-      padding: 50,
+      padding: 25,
       margin:10,
-      backgroundColor: '#000000',
+    //   backgroundColor: '#000000',
     //   borderColor: '#639dda',
       borderWidth: 2,
-      borderRadius:5
+      borderRadius:5,
+      justifyContent:'center',
+      alignItems:"center"
     },
     greeting: {
       fontSize: 30,

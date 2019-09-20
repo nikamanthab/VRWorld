@@ -29,6 +29,12 @@ class Keyboard extends React.Component{
         changeSearchText(this.props.text+input)
     }
 
+    handleSpace = ()=> {
+        let input = this.props.text;
+        input = input + " ";
+        changeSearchText(input);
+    }
+
     handleBackspace = ()=>{
         let input = this.props.text;
         input = input.slice(0,input.length-1)
@@ -71,7 +77,7 @@ class Keyboard extends React.Component{
             <View style={styles.panel}>   
                   {inputtext}
                 <View style={{flexDirection:"row"}}>
-                    <View style={{borderColor:"green",borderWidth: 2,}}>
+                    <View >
                         <View style={styles.keyboard}>
                         {this.renderKeys(this.state.num)}
                         </View>    
@@ -87,9 +93,9 @@ class Keyboard extends React.Component{
                     </View>
                     <View>
                         <View style={styles.enter}>
-                            <VrButton>
+                            <VrButton onClick={this.handleSpace} >
                                 <Text>
-                                    Enter
+                                    Space
                                 </Text>
                             </VrButton>
                         </View> 

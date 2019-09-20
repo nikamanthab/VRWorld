@@ -20,7 +20,7 @@ var trieroot = new TrieNode("*",[]);
 //LAYER 1
 var play = new TrieNode("play",["play", "they", "way", "say", "pay", "pray", "away"]);
 play.end = true;
-var pause = new TrieNode("pause",["pause", "boss","pass","laws", "claws", "paws", "flaws", "paus", "shaws", "was", "cause"]);
+var pause = new TrieNode("pause",["pause", "boss","horse","pass","laws", "claws", "paws", "flaws", "paus", "shaws", "was", "cause"]);
 pause.end = true;
 var go = new TrieNode("go", ["go", "hoe", "doe"])
 var volume = new TrieNode("volume", ["volume", "toluene", "column", "solemn", "costume", "on whom", "washroom", "was room"]);

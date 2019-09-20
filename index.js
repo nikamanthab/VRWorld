@@ -47,6 +47,7 @@ export default class CooperPlaza extends React.Component {
           movies = {this.props.movies}
           searchtext={this.props.searchtext}
           friends ={this.props.friends}
+          username = {this.props.username}
         />
       )
     }
