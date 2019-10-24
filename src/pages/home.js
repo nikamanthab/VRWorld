@@ -72,7 +72,7 @@ handleselect(val,val1,val2,val3){
 
 }
 
-handleredirect(){
+handleredirect(friend){
   console.log("friends:",this.props.friends,this.state.id,this.state.selected);
   let myfriends=this.props.friends.filter(data =>{
     return data[0]["status"]==true
@@ -82,8 +82,7 @@ handleredirect(){
   });
   
   console.log("myfriends:",myarr)
-
-  watchParty(myarr,this.state.id,true,this.state.selected,this.state.photo);
+  watchParty(myarr,this.state.id,friend,this.state.selected,this.state.photo);
   emitJoin(this.state.id,"");
   this.props.changePage("video",this.state.selected);
 }
@@ -136,14 +135,14 @@ handleredirect(){
             </View>
           <View style={{width: 500, height:50, flexDirection:'row',justifyContent:"space-between"}}>
             {/* <AnimatedBtn text={"nitin"}/> */}
-            <AnimatedBtn onClick={() => this.handleredirect()} text={"Create Party"}/>
+            <AnimatedBtn onClick={() => this.handleredirect(true)} text={"Create Party"}/>
             {/* <VrButton style={styles.buttons} disabled={this.state.visible} onClick={() => this.handleredirect()}>
                 <Text style={styles.greeting}>Create Party</Text>
             </VrButton> */}
             <VrButton onClick={()=>{this.handleSearch()}}>
                 <Image source={search} style={{width:50,height:50}}/>
             </VrButton>
-            <AnimatedBtn onClick={alert("enter")} text={"Suggest Party"} />
+            <AnimatedBtn onClick={() => this.handleredirect(false)} text={"Suggest Party"} />
             {/* <VrButton style={styles.buttons}>
                <Text style={styles.greeting}>Suggest Party</Text>
             </VrButton> */}

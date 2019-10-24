@@ -16,7 +16,7 @@ class Right extends React.Component{
         if(this.props.type == "friends")
             listenParty(true)
         else if(this.props.type == "global") 
-            listenParty(false)      
+            listenParty(false) 
     }
     movetoParty(movieid,initiator){
         console.log("movieid",movieid)
@@ -26,8 +26,8 @@ class Right extends React.Component{
 
     }
     renderGlobal(){
-
-        console.log("here",this.props.globalfriends);
+        if(this.props.type == "global")
+            console.log("here",this.props.globalfriends);   
         let joinparty = this.props.globalfriends;
         list = joinparty.map((ele,i)=>{
             return(
@@ -67,7 +67,7 @@ class Right extends React.Component{
     }
 
     render = ()=>{
-       
+        console.log("props in right panel:",this.props);
         console.log("here1",this.props.type,this.props.globalfriends)
         return(
             <View style={{width: 400,height: 600,}}>  
