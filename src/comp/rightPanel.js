@@ -16,7 +16,7 @@ class Right extends React.Component{
         if(this.props.type == "friends")
             listenParty(true)
         else if(this.props.type == "global") 
-            listenParty(false) 
+            listenParty(false)
     }
     movetoParty(movieid,initiator){
         console.log("movieid",movieid)

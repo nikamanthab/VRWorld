@@ -238,6 +238,7 @@ export const handleAuth = ()=>{
         if(val) {
             setUserId(val2,resname);
             console.log("in comp222:",val2);
+            console.log("in comp333:",State.userid);
             peerAudioModule.socketconnection(val2);
             changePage("home");
         }
@@ -248,6 +249,7 @@ export const handleAuth = ()=>{
                     console.log("boomboom:",val2);
                     setUserId(val2,resname);
                     console.log("in comp222:",val2);
+                    console.log("in comp333:",State.userid);
                     peerAudioModule.socketconnection(val2);
                     changePage("home")
                 }
@@ -300,6 +302,7 @@ export const connect = (Component)=>{
             globalfriends: State.globalfriends,
             myfriends: State.myfriends,
             username:State.username,
+            userid:State.userid
         }
 
         _listener = ()=>{
@@ -316,6 +319,7 @@ export const connect = (Component)=>{
                 globalfriends: State.globalfriends,
                 myfriends: State.myfriends,
                 username: State.username,
+                userid:State.userid
                 })
         }
 
@@ -338,6 +342,7 @@ export const connect = (Component)=>{
                     globalfriends = {this.state.globalfriends}
                     myfriends = {this.state.myfriends}
                     username = {this.state.username}
+                    userid = {this.state.userid}
                 />
             )
         }

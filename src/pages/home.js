@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import {
     AppRegistry,
     StyleSheet,
@@ -73,14 +74,26 @@ handleselect(val,val1,val2,val3){
 }
 
 handleredirect(friend){
-  console.log("friends:",this.props.friends,this.state.id,this.state.selected);
-  let myfriends=this.props.friends.filter(data =>{
-    return data[0]["status"]==true
-  });
-  let myarr= myfriends.map(ele =>{
-    return ele[1];
-  });
-  
+  if(friend){
+    console.log("friends:",this.props.friends,this.state.id,this.state.selected);
+    let myfriends=this.props.friends.filter(data =>{
+      return data[0]["status"]==true
+    });
+    let myarr = myfriends.map(ele =>{
+      return ele[1];
+    });
+  }
+  else{
+    console.log(`http://13.90.228.216:3400/serve/suggest?uid=${this.props.userid}`);
+    axios.get(`http://13.90.228.216:3400/serve/suggest?uid=${this.props.userid}`).then(data=>{
+      console.log("axios res:",data.data);
+      myarr = data.data;
+      watchParty(myarr,this.state.id,friend,this.state.selected,this.state.photo);
+      emitJoin(this.state.id,"");
+      this.props.changePage("video",this.state.selected);
+    })
+    return ;
+  }
   console.log("myfriends:",myarr)
   watchParty(myarr,this.state.id,friend,this.state.selected,this.state.photo);
   emitJoin(this.state.id,"");
@@ -88,6 +101,7 @@ handleredirect(friend){
 }
   
   render = ()=>{
+    console.log(this.props);
     let searchedmovies;
     let nn = [];
     for(ele of this.props.movies){
