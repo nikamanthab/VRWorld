@@ -36,7 +36,7 @@ export default class CooperPlaza extends React.Component {
     if(this.props.page === "login"){
       page = (
         <LoginPage
-          login={this.handleLogin}
+          // login={this.handleLogin}
         />
       )
     }
@@ -48,6 +48,7 @@ export default class CooperPlaza extends React.Component {
           searchtext={this.props.searchtext}
           friends ={this.props.friends}
           username = {this.props.username}
+          coldStatus={this.props.coldStatus}
         />
       )
     }
@@ -119,7 +120,6 @@ class FriendsPanel extends React.Component{
 class LeftPanel extends React.Component {
 
   render() {
-    console.log("text:",this.props.friends)
     let page = <View></View>;
     if(this.props.page === "home"){
       page=(

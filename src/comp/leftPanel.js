@@ -21,7 +21,6 @@ import {addFriend,acceptHandler} from './../../store';
 
 class Left extends React.Component{
     componentDidMount = ()=>{
-        console.log("did mount of left panel")
         // getFriendsList()
     }
 
@@ -38,7 +37,6 @@ class Left extends React.Component{
     }
 
     handleAccept = (id)=>{
-        console.log("idid:",id)
         acceptHandler(id)
     }
     handleAddFriend = (uid)=>{

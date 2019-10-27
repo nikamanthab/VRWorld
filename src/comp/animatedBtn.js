@@ -16,11 +16,11 @@ const CLICK_SOUND = asset('./audio/menu-click.wav');
 const FOCUS_SCALE = 1.1;
 
 export default class InfoButton extends React.Component {
-  static defaultProps = {
-    width: 180,
-    height: 30,
-    text: '',
-  };
+  // static defaultProps = {
+  //   width: 180,
+  //   height: 30,
+  //   text: '',
+  // };
 
   // This component has example to show how animation works
   // You can check the doc: https://facebook.github.io/react-native/docs/0.49/animated#docsNav
@@ -77,8 +77,9 @@ export default class InfoButton extends React.Component {
             >
             <Animated.View
               style={[
-                styles.button,
+                styles.button,{backgroundColor: ((this.props.selected)?this.props.selectedColor : this.props.backgroundcolor)||"#0690ba"},
                 this.state.hasFocus && styles.buttonFocused,
+                this.state.hasFocus && { backgroundColor: this.props.focusBack||"#3dcaf5"},
                 {
                   // With this the width of the this view
                   // is animated with the value of scaleAnim
@@ -92,7 +93,7 @@ export default class InfoButton extends React.Component {
                     outputRange: [this.props.width, this.props.width * FOCUS_SCALE],
                   }),
                 }]}>
-                <Text style={styles.text}>
+                <Text style={[styles.text,{fontSize:this.props.fontSize||10}]}>
                   {this.props.text}
                 </Text>
                 {icon}

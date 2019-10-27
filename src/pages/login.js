@@ -54,7 +54,7 @@ class LoginPage extends React.Component{
             <View style={styles.panel}>
                 <View style={styles.greetingBox}>
                     <Text style={styles.greeting}>
-                    COOPER PLAZA
+                    VIRTUAL GALAXY
                     </Text>
                 </View>
 

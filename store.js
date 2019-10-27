@@ -17,6 +17,7 @@ console.log("hmmm",friends);
 
 const State = {
     // someart:undefined,
+    coldStatus: false,
     userid:undefined,
     username:"",
     friendlistpage: 1,
@@ -57,9 +58,10 @@ setVideo = (movie)=>{
     State.people = ["mohan","jo","rya"];
 }
 
-export const setUserId = (val,resname)=>{
+export const setUserId = (val,resname,status)=>{
     State.userid = val;
     State.username = resname;
+    State.coldStatus = status;
     console.log("useridset:",val);
     updateComponents();
 }
@@ -105,6 +107,7 @@ friendsGen = (bobo)=>{
         friendsGen(false);
     })
 }
+
 
 getFriendsList = ()=>{
     console.log("yoyo")
@@ -168,6 +171,14 @@ export const upClick = ()=>{
             updateComponents();
         })
     }
+}
+export const handleColdstart = (list) =>{
+    console.log("from store",list,State.userid);
+    fbAuth.firstBoot(list,State.userid,(val) =>{
+        State.coldStatus = val;
+        updateComponents();
+    });
+
 }
 
 export const downClick = ()=>{
@@ -236,7 +247,7 @@ export const handleAuth = ()=>{
         // });
 
         if(val) {
-            setUserId(val2,resname);
+            setUserId(val2,resname,false);
             console.log("in comp222:",val2);
             peerAudioModule.socketconnection(val2);
             changePage("home");
@@ -246,10 +257,13 @@ export const handleAuth = ()=>{
             fbAuth.fbAuthenticate((val,val2,resname) => {
                 if(val){
                     console.log("boomboom:",val2);
-                    setUserId(val2,resname);
-                    console.log("in comp222:",val2);
-                    peerAudioModule.socketconnection(val2);
-                    changePage("home")
+                    console.log("boom",fbAuth.getColdStatus)
+                    fbAuth.getColdStatus(val2,(status) =>{
+                        console.log("in comp222:",val2,status);
+                        setUserId(val2,resname,status);
+                        peerAudioModule.socketconnection(val2);
+                        changePage("home")
+                    });   
                 }
             });
             // this.props.login();
@@ -300,6 +314,7 @@ export const connect = (Component)=>{
             globalfriends: State.globalfriends,
             myfriends: State.myfriends,
             username:State.username,
+            coldStatus:State.coldStatus,
         }
 
         _listener = ()=>{
@@ -316,6 +331,7 @@ export const connect = (Component)=>{
                 globalfriends: State.globalfriends,
                 myfriends: State.myfriends,
                 username: State.username,
+                coldStatus: State.coldStatus,
                 })
         }
 
@@ -338,6 +354,7 @@ export const connect = (Component)=>{
                     globalfriends = {this.state.globalfriends}
                     myfriends = {this.state.myfriends}
                     username = {this.state.username}
+                    coldStatus = {this.state.coldStatus}
                 />
             )
         }

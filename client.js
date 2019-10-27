@@ -201,7 +201,6 @@ var parties=[];
 class fbAuth extends Module{
 
   constructor(ctx){
-    console.log("bhaambhaam")
     super('fbAuth');
     this._ctx = ctx;
     this.db = undefined;
@@ -227,6 +226,48 @@ class fbAuth extends Module{
     return this.userid;
   }
 
+  getColdStatus(uid,callbackid){
+    console.log("uid received",uid)
+      this.db.collection("users").doc(uid).get().then((sn)=>{
+        console.log(sn.data(),"EE");
+        let d = sn.data().isCold;
+        console.log(d);
+        this._ctx.invokeCallback(
+          callbackid, // callback id, passed to the method
+          [d]
+        );
+
+      });
+  
+     
+    
+  }
+
+  firstBoot(categories, uid,callid) {
+    const col = this.db.collection('movies');
+    this.db.collection("users").doc(uid).update({isCold:false});
+    categories.forEach((x, j) => {
+      let query = col.where('categories', 'array-contains', x);
+      query.get().then((qs) => {
+        qs.forEach((docr) => {
+          let id = docr.id;
+          this.db.collection("ratings").doc(uid + id).set({
+            rating: "5",
+            movieid:id,
+            uid
+          },{merge:true})
+          
+        });
+        this._ctx.invokeCallback(
+          callid, // callback id, passed to the method
+          [false]
+        );
+      })
+   
+    });
+  }
+
+
 
   fbsetup(id){
 
@@ -240,7 +281,7 @@ class fbAuth extends Module{
       
     FB.AppEvents.logPageView();   
 
-    
+
     FB.getLoginStatus((response) => {
       console.log("check status",response.status);
       if (response.status == 'connected'){  
@@ -254,7 +295,9 @@ class fbAuth extends Module{
               // this.username = response.name;
               this.username = response.name.toLowerCase().replace(/\s+/,"");
               this.controller(this.firlibConfig,response.id)
-        
+              
+
+
               this._ctx.invokeCallback(
                 id, // callback id, passed to the method
                 [true,response.id,this.username]
@@ -293,11 +336,24 @@ controller = (config, uid) => {
 register= (name,profilepic)=>{
   return new Promise((res,rej)=>{
       console.log("in there",this.u,name,profilepic,this.db);
-       this.db.collection("users").doc(this.u).set({
-          name,profilepic,onlineStatus:true
-      }).then(()=>{
-          res(true);
+      this.db.collection("users").doc(this.u).get().then((sn)=>{
+        if(sn.data()==undefined){
+          console.log("int ");
+          this.db.collection("users").doc(this.u).set({
+            name,profilepic,onlineStatus:true,isCold:true
+        }).then(()=>{
+            res(true);
+        });
+        }else{
+          this.db.collection("users").doc(this.u).set({
+            name,profilepic,onlineStatus:true,isCold:false
+        }).then(()=>{
+            res(true);
+        });
+          
+        }
       });
+       
   });
 };
 
@@ -322,13 +378,11 @@ $addFriend(f) {
 }
 
 getFriends(flag,callbackid){
-  console.log("umbru2");
   var switcher = false;
   let counter = 0;
   this.db.collection("friends").where("fuid", "==", this.u)
       .onSnapshot( (querySnapshot) => {
           switcher = true;
-          console.log("achaaa:");
           if(querySnapshot.docs.length==0){
             console.log("query0");
             console.log("counter:",counter);
@@ -358,25 +412,20 @@ getFriends(flag,callbackid){
                   console.log("hittt",!switcher);
                   console.log(!switcher);
                   if (!switcher){
-                    console.log("gumahuma1")
                       this._ctx.invokeCallback(
                         callbackid,
                         [friends]
                       )
-                      console.log("called gummahuma1")
                   }
                       // callback(friends);
                   if (switcher) {
                       if (arr.length == i+1) {
-                        console.log("guma2");
                           this._ctx.invokeCallback(
                             callbackid,
                             [friends]
                           );
                           // callback(friends);
                           switcher = false;
-                          console.log("called gummahuma2")
-
                       }
                   }
               });
@@ -408,14 +457,12 @@ search(frname,page,callbackid){
 
 $acceptFriendreq(friend){
   return new Promise((res, rej) => {
-    console.log("accepthit");
       this.db.collection("friends").where("fuid", "==", this.u).where("uid", "==",friend).get().then((docs) => {
           docs.forEach((docr) => {
               this.db.collection("friends").doc(docr.id).update({
                   status: true
               }).then(() => {
                 this.db.collection("friends").doc().set({uid:this.u,status:true,fuid:friend});
-                console.log("al6767");
                 res(true);
               }).catch((err) => {
                   rej(err);
@@ -431,10 +478,8 @@ getMovies(callbackid){
       qs.forEach((doc)=>{
         let payload={};
         payload.id=doc.id;
-        console.log("booth3:",doc.data(),payload);
           arr.push(Object.assign(doc.data(),payload));
       });
-      console.log("boothu5",arr);
       this._ctx.invokeCallback(
         callbackid,
         [arr]
@@ -442,9 +487,7 @@ getMovies(callbackid){
     }).catch((err)=>rej(err));
 }
 createWatchParty(arr,movieid,friends,moviename,photo){
-  console.log("inwatch!!");
      this.db.collection("watchparty").doc(this.u+movieid).set({movieid,invited:arr,initiator:this.u,friends,name:this.username,moviename,photo}).then(()=>{
-       console.log("addedwatch");  
      })
 
 }
@@ -460,11 +503,9 @@ filter(arr,friends) {
 listenWatchParty(bobo,friends,callbackid){
   let counter = 0;
   this.db.collection("watchparty").where("invited", "array-contains",this.u).onSnapshot((snapshot)=>{
-    console.log("lenght",snapshot.docs.length);
          snapshot.forEach((doc)=>{
              parties.push(doc.data());
          });
-         console.log("parties",parties)
          if(counter == 1 || bobo){
           if(friends){
             this._ctx.invokeCallback(
@@ -506,15 +547,12 @@ fbAuthenticate(fbid){
         response.authResponse.userID,
         (response) => {
           if (response && !response.error) {
-            console.log("hi theeee",response.name,response.id);// code here
             userid = response.id;
             // this.username= response.name;
             this.controller(this.firlibConfig,response.id);
-            console.log("after init");
             // console.log(fireregister);
             let resname=response.name.toLowerCase().replace(/\s+/,"");
             this.username = resname;
-            console.log("resname",resname);
             this.register(resname,"http://graph.facebook.com/"+response.id+"/picture?type=large&width=720&height=720").then(data =>{
               if(data){
               console.log("registered:",response.id);
@@ -567,7 +605,6 @@ class peerAudioModule extends Module {
   }
 
   socketControll(event){
-    console.log("event trigg",event)
     if(event.status == "ready"){
       this.socket.emit("controls", {
         action: "seek",
@@ -596,7 +633,6 @@ class peerAudioModule extends Module {
   }
 
   socketPause(id){
-    console.log("huo",id)
     this.socket.on("controlUpdate", (obj) => {
       // this._ctx.invokeCallback(
       //   manoverid, // callback id, passed to the method
@@ -605,7 +641,6 @@ class peerAudioModule extends Module {
       console.log("In socket")
       if (obj.id === this.socket.id)
           return;
-      console.log("obj1",obj);
       if (obj.action === "play") {
         console.log("play triggered")
         this._ctx.invokeCallback(
@@ -634,37 +669,6 @@ class peerAudioModule extends Module {
       }
   });
   }
-
-  // socketPlay(playid){
-  //   socket.on("controlUpdate", (obj) => {
-      
-  //     if (obj.id === socket.id)
-  //         return;
-  //     console.log(obj);
-  //     if (obj.action === "play") {
-  //         this._ctx.invokeCallback(
-  //           playid, // callback id, passed to the method
-  //           [obj.currentTime]
-  //         );
-  //     }
-  // });
-  // }
-
-  // socketSeek(seekid){
-  //   socket.on("controlUpdate", (obj) => {
-      
-  //     if (obj.id === socket.id)
-  //         return;
-  //     console.log(obj);
-  //     if (obj.action === "play") {
-  //         this._ctx.invokeCallback(
-  //          seekid, // callback id, passed to the method
-  //           [obj.currentTime]
-  //         );
-  //       }
-  //   });
-  // }
-  
   socketemit(word,data){
     if(word == "joinRoom" && this.socket.firstVisit){
       console.log("wrong-place",this.socket.listeners("roomJoinSuccess"));
@@ -757,12 +761,10 @@ class peerAudioModule extends Module {
                 audio: true,
               }).then((stream) => {
                 this.callStreams.push(stream);
-                console.log("mypeersIt1",this.callStreams)
                 call = peer.call(id, stream);
                 var callpeer = this.mypeers.filter(x => x.peer == call.peer)[0];
                 if (callpeer) {
                     callpeer.call = call;
-                    console.log("call object injected");
                 }
                 call.on('stream', (stream) => {
                   console.log("received stream answered");
@@ -788,7 +790,6 @@ class peerAudioModule extends Module {
               var callpeer = this.mypeers.filter(x => x.peer == call.peer)[0];
               if (callpeer) {
                           callpeer.call = call;
-                           console.log("call object injected after receiuvingli");
                   }
               navigator.mediaDevices.getUserMedia({
                 audio: true,
@@ -799,25 +800,12 @@ class peerAudioModule extends Module {
                 call.on('stream', function (stream) {
                   console.log("received stream");
                   var audio = new Audio();
-                  // var audio = document.createElement("audio");
                   audio.srcObject = stream;
-                  // audio.style.display = "none";
-                  // sel("#wrapper").appendChild(audio);
                   audio.play();
-                  // let a = new Audio();
-                  // a.muted = true;
-                  // a.srcObject = stream;
-                  // var peerInput = context
-                  //     .createMediaStreamSource(
-                  //         stream);
-                  // console.log("connecting to dest");
-                  // peerInput.connect(context.destination);
-                  // inject(newchip("Done"));
                 });
               });
             });
             peer.on('data', function (data) {
-              console.log("hittedma");
               // inject(newchip(`! Peer message, ${data}`));
             });
             this.socket.on("signal", (d) => {
@@ -837,7 +825,6 @@ class peerAudioModule extends Module {
                 console.log("pushed to no of peers");
                 // sel("#conn").innerHTML += conn.peer + ",";
                 conn.on('data', function (data) {
-                  console.log("hittedma");
                   // inject(newchip(`Peer message, ${data}`));
                 });
               });
@@ -877,31 +864,6 @@ class peerAudioModule extends Module {
       this.mypeers=[];
       this.callStreams=[];
       }
-
-
-
-
-
-        //  peer logic
-        // videostatus(status){
-        //   if(status === 'playing'){
-
-        //   }
-        //   else if(status === 'loading'){
-
-        //   }
-        //   else if()
-        // }
-
-        // stream() {
-        //   navigator.mediaDevices.getUserMedia({
-        //     audio: true,
-        //   }).then((stream) => {
-        //     window.stream = stream;
-        //   });
-        //   console.log(new Audio());
-        //   console.log("loaded...")
-        // }
 
 
       }

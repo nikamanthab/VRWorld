@@ -12,6 +12,7 @@ import {getFriendsList,getAllMovies,watchParty,setSelectedMovieidInStore,emitJoi
 // import {getFriendsList,getAllMovies,watchParty,} from './../../store'
 import AnimatedBtn from './../comp/animatedBtn';
 import search from './../../static_assets/search.png';
+import ColdPanel from './../comp/coldstart';
 
 class Home extends React.Component{
 
@@ -123,33 +124,45 @@ handleredirect(){
                 </View>
             )
         })
-        return(
-          <View style={styles.panel}>
-            <View style={styles.header}>
-                <Text style={styles.greeting}>
-                  {"Welcome, " + this.props.username}
-                </Text>
+
+        if(this.props.coldStatus == false){
+          return(
+            <View style={styles.panel}>
+              <View style={styles.header}>
+                  <Text style={styles.greeting}>
+                    {"Welcome, " + this.props.username}
+                  </Text>
+              </View>
+            
+              <View style={styles.flexPanel} >
+                {list}
+              </View>
+            <View style={{width: 500, height:50, flexDirection:'row',justifyContent:"space-between"}}>
+              <AnimatedBtn onClick={() => this.handleredirect()} text={"Create Party"} fontSize={20} height={30} width={180}/>
+              <VrButton onClick={()=>{this.handleSearch()}}>
+                  <Image source={search} style={{width:50,height:50}} />
+              </VrButton>
+              <AnimatedBtn onClick={alert("enter")} text={"Suggest Party"} fontSize={20}  height={30} width={180}/>
             </View>
-          
-            <View style={styles.flexPanel} >
-              {list}
             </View>
-          <View style={{width: 500, height:50, flexDirection:'row',justifyContent:"space-between"}}>
-            {/* <AnimatedBtn text={"nitin"}/> */}
-            <AnimatedBtn onClick={() => this.handleredirect()} text={"Create Party"}/>
-            {/* <VrButton style={styles.buttons} disabled={this.state.visible} onClick={() => this.handleredirect()}>
-                <Text style={styles.greeting}>Create Party</Text>
-            </VrButton> */}
-            <VrButton onClick={()=>{this.handleSearch()}}>
-                <Image source={search} style={{width:50,height:50}}/>
-            </VrButton>
-            <AnimatedBtn onClick={alert("enter")} text={"Suggest Party"} />
-            {/* <VrButton style={styles.buttons}>
-               <Text style={styles.greeting}>Suggest Party</Text>
-            </VrButton> */}
-          </View>
-          </View>
-        )
+          )
+        }
+        else{
+          return(
+            <View style={styles.panel}>
+              <View style={styles.header}>
+                  <Text style={styles.greeting}>
+                    {"Welcome, " + this.props.username}
+                  </Text>
+              </View>
+              <View style={{width: 980,height:500 }} >
+                  <ColdPanel cardlist={["action","comedy","scifi","documentry","romance"]}/>
+              </View>
+            
+            </View>
+            
+          )
+        }
     
 }
 }

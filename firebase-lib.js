@@ -1,5 +1,4 @@
 // import firebase from 'firebase';
-console.log("jooooooooooooooooooooooooooo",firebase)
 let db;
 let u;
 var friends = [];
@@ -41,7 +40,6 @@ function filter(arr,friends) {
 
 const register= (name,profilepic)=>{
     return new Promise((res,rej)=>{
-        console.log("in there",u,name,profilepic,db);
          db.collection("users").doc(u).set({
             name,profilepic
         }).then(()=>{
@@ -174,7 +172,6 @@ export const controller = (config, uid) => {
     firebase.initializeApp(config);
     db = firebase.firestore();
     u = uid;
-    console.log("firebase domeel");
     return {
         getFriends,register,addFriend,acceptFriendreq,search
     }
