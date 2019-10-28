@@ -234,7 +234,7 @@ export const listenParty = (friends)=>{
 export const ratingByClient = (ratingarr)=>{
     let sendarr=[{"rating":ratingarr,"uid":State.userid,"movieid":State.selectedMovie}];
     console.log("rating in store",sendarr);
-    fbAuth.rateMovie(sendarr);
+    fbAuth.rateMovie(State.userid,State.selectedMovie,ratingarr);
 }
 
 export const handleAuth = ()=>{

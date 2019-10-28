@@ -21,6 +21,7 @@ class Home extends React.Component{
     visible:true,
     movieselected:null,
     movies: [],
+    photo:"",
     search: "",
     styles:{
       height:220,
@@ -75,12 +76,13 @@ handleselect(val,val1,val2,val3){
 }
 
 handleredirect(friend){
+  let myarr;
   if(friend){
     console.log("friends:",this.props.friends,this.state.id,this.state.selected);
     let myfriends=this.props.friends.filter(data =>{
       return data[0]["status"]==true
     });
-    let myarr = myfriends.map(ele =>{
+    myarr = myfriends.map(ele =>{
       return ele[1];
     });
   }
@@ -116,7 +118,7 @@ handleredirect(friend){
   console.log("suppu2",nn);
   searchedmovies = nn;
   searchedmovies = searchedmovies.slice(0,12);
-    console.log("fuckkkkkkk:",searchedmovies,this.props.movies)
+    console.log("fuckkkkkkk:",searchedmovies,this.props.movies,this.props.coldStatus)
     let list = <View></View>
         // movies = this.props.movies;
         list = searchedmovies.map((ele,i)=>{
@@ -151,11 +153,11 @@ handleredirect(friend){
                 {list}
               </View>
             <View style={{width: 500, height:50, flexDirection:'row',justifyContent:"space-between"}}>
-              <AnimatedBtn onClick={() => this.handleredirect()} text={"Create Party"} fontSize={20} height={30} width={180}/>
+              <AnimatedBtn onClick={() => this.handleredirect(true)} text={"Create Party"} fontSize={20} height={30} width={180}/>
               <VrButton onClick={()=>{this.handleSearch()}}>
                   <Image source={search} style={{width:50,height:50}} />
               </VrButton>
-              <AnimatedBtn onClick={this.handleredirect(false)} text={"Suggest Party"} fontSize={20}  height={30} width={180}/>
+              <AnimatedBtn onClick={()=> this.handleredirect(false)} text={"Suggest Party"} fontSize={20}  height={30} width={180}/>
             </View>
             </View>
           )

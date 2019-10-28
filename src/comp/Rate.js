@@ -34,27 +34,27 @@ class Rate extends React.Component{
                     <View style={styles.flexDiv}> 
                         <View >
                             <VrButton style={styles.greeting} onClick={()=>this.submitRating(1)}>
-                                <AnimatedBtn icon={star}/>
+                                <AnimatedBtn icon={star} height={100} width={100}/>
                             </VrButton>
                         </View>
                         <View >
                             <VrButton style={styles.greeting} onClick={()=>this.submitRating(2)}>
-                                <AnimatedBtn icon={star}/>
+                                <AnimatedBtn icon={star} height={100} width={100}/>
                             </VrButton>
                         </View>
                         <View  >
                             <VrButton style={styles.greeting} onClick={()=>this.submitRating(3)}>
-                                <AnimatedBtn icon={star}/>
+                                <AnimatedBtn icon={star} height={100} width={100}/>
                             </VrButton>
                         </View>
                         <View >
                             <VrButton style={styles.greeting} onClick={()=>this.submitRating(4)}>
-                                <AnimatedBtn icon={star}/>
+                                <AnimatedBtn icon={star} height={100} width={100}/>
                             </VrButton>
                         </View>
                         <View >
                             <VrButton style={styles.greeting} onClick={()=>this.submitRating(5)}>
-                                <AnimatedBtn icon={star}/>
+                                <AnimatedBtn icon={star} height={100} width={100}/>
                             </VrButton>
                         </View>
                     </View>

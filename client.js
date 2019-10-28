@@ -455,6 +455,22 @@ search(frname,page,callbackid){
   });
 }
 
+rateMovie(uid, movieid, rating){
+     this.db.collection("ratings").doc(uid + movieid).set({
+      movieid,
+      rating,
+      uid
+    }, {
+      merge: true
+    }).then(() => {
+      console.log("Added")
+    }).catch(() => {
+      console.log("Exit")
+    });
+
+}
+
+
 $acceptFriendreq(friend){
   return new Promise((res, rej) => {
       this.db.collection("friends").where("fuid", "==", this.u).where("uid", "==",friend).get().then((docs) => {
@@ -487,6 +503,7 @@ getMovies(callbackid){
     }).catch((err)=>rej(err));
 }
 createWatchParty(arr,movieid,friends,moviename,photo){
+     console.log("atwatch",photo);
      this.db.collection("watchparty").doc(this.u+movieid).set({movieid,invited:arr,initiator:this.u,friends,name:this.username,moviename,photo}).then(()=>{
      })
 
@@ -525,17 +542,6 @@ listenWatchParty(bobo,friends,callbackid){
   })
 }
 
-rateMovie(arr){
-  var batch = this.db.batch();
-  for (data of arr) {
-      batch.set(this.db.collection("ratings").doc(), {
-          movieid: data.movieid,
-          rating: data.rating,
-          uid: this.u
-      });
-  };
-       batch.commit();
-};
 
 fbAuthenticate(fbid){
   // let id = 452651015464681

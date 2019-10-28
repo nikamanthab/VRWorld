@@ -50,7 +50,7 @@ class Left extends React.Component{
         
 
         if(this.props.friendsactive){
-            friends = this.props.friends;
+            friends = this.props.friends||[];
             console.log("booom:",this.props.searchtext,friends)
             list = friends.map((ele,i)=>{
                 console.log("onlinestaus:",ele[0].onlineStatus);
@@ -90,7 +90,7 @@ class Left extends React.Component{
             });
         }
         else{
-            peoples = this.props.people;
+            peoples = this.props.people || [];
             list = peoples.map((ele,i)=>{
                 console.log("onlinestaus:",ele.onlineStatus);
                 let onlinelogo = (ele.onlineStatus? <Image style={styles.img} source={greendot}/>:<Image style={styles.img} source={reddot}/>)
