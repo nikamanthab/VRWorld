@@ -185,12 +185,12 @@ class Info extends React.Component{
   render = ()=>{
     let page = <View></View>
     if(this.props.page === "video"){
-      page = (
-      <InfoPanel
-      movie = {this.props.selectedMovie}
-      allmovies = {this.props.movies}
-      />
-      )
+      // page = (
+      // <InfoPanel
+      // movie = {this.props.selectedMovie}
+      // allmovies = {this.props.movies}
+      // />
+      // )
     }
     
     return(
