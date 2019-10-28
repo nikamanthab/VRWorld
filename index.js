@@ -205,16 +205,16 @@ class PeoplePanel extends React.Component{
   render = ()=>{
     let page = <View></View>
     if(this.props.page === "video"){
-      page = (
-        <Left
-            changePage = {changePage}
-            movies={this.props.friends}
-            searchtext={this.props.searchtext}
-          />
+      // page = (
+        // <Left
+        //     changePage = {changePage}
+        //     movies={this.props.friends}
+        //     searchtext={this.props.searchtext}
+        //   />
       // <People
       //   people={this.props.people}
       // />
-      )
+      // )
     }
     return(
       <View>
