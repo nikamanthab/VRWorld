@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "polyfill": "^0.1.0",
     "react": "16.3.2",
     "react-360": "~1.1.0",
